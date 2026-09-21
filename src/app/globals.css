@@ -46,6 +46,61 @@ body {
   box-shadow: 0 1px 1px rgba(59, 42, 31, 0.08), 0 8px 18px -8px rgba(59, 42, 31, 0.35);
 }
 
+.login-panel {
+  background: color-mix(in srgb, var(--polaroid) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--line) 72%, white);
+  border-radius: 28px;
+  box-shadow: 0 18px 55px -34px rgba(59, 42, 31, 0.55);
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.story-viewport {
+  position: relative;
+  overflow-x: hidden;
+  padding: 1rem 0 1.75rem;
+}
+
+.story-path {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 48%;
+  border-top: 10px dashed color-mix(in srgb, var(--path) 76%, transparent);
+  transform: rotate(-1deg);
+}
+
+.story-track {
+  display: flex;
+  width: max-content;
+  gap: clamp(1.25rem, 4vw, 3rem);
+  padding: 0 1.5rem;
+  animation: story-drift-right 44s linear infinite;
+  will-change: transform;
+}
+
+.story-viewport:hover .story-track,
+.story-viewport:focus-within .story-track { animation-play-state: paused; }
+
+.story-card {
+  position: relative;
+  width: min(72vw, 320px);
+  flex: none;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--paper) 88%, white);
+  padding: 0.75rem 0.75rem 1.25rem;
+}
+
+.story-polaroid { width: 100%; }
+.story-card-1 { transform: rotate(-1.5deg); }
+.story-card-2 { transform: translateY(18px) rotate(1.5deg); }
+.story-card-3 { transform: translateY(-5px) rotate(-1deg); }
+.story-card-4 { transform: translateY(12px) rotate(2deg); }
+
+@keyframes story-drift-right {
+  from { transform: translateX(calc(-50% - 0.75rem)); }
+  to { transform: translateX(0); }
+}
+
 .field {
   width: 100%;
   background: var(--polaroid);
@@ -74,4 +129,5 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+  .story-viewport { overflow-x: auto; }
 }

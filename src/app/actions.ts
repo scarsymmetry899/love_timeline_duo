@@ -39,10 +39,14 @@ export async function createJourney(_: unknown, form: FormData) {
   redirect("/");
 }
 
-export async function createInvite() {
+export async function createInvite(partnerEmail: string) {
   const supabase = await createClient();
   const uid = await getUserId(supabase);
+  const email = partnerEmail.trim().toLowerCase();
   if (!uid) return { error: "Your sign-in expired. Please sign in again." };
+  if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 320) {
+    return { error: "Enter your partner’s email address." };
+  }
   const { data: member } = await supabase
     .from("couple_members").select("couple_id").eq("user_id", uid).single();
   if (!member) return { error: "Start your journey first." };
@@ -52,6 +56,7 @@ export async function createInvite() {
     .from("couple_invites")
     .select("code")
     .eq("couple_id", member.couple_id)
+    .eq("intended_email", email)
     .is("accepted_at", null)
     .gt("expires_at", new Date().toISOString())
     .limit(1)
@@ -59,7 +64,10 @@ export async function createInvite() {
   if (open) return { code: open.code as string };
 
   const { data, error } = await supabase
-    .from("couple_invites").insert({ couple_id: member.couple_id }).select("code").single();
+    .from("couple_invites")
+    .insert({ couple_id: member.couple_id, intended_email: email })
+    .select("code")
+    .single();
   if (error) return { error: error.message };
   return { code: data.code as string };
 }
