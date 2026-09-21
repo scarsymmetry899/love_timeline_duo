@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #fcefb8;          /* butter paper, from the reference */
+  --paper-deep: #f5dd92;
+  --path: #f8c28c;           /* the dashed trail */
+  --polaroid: #fffdf7;
+  --ink: #3b2a1f;            /* warm brown ink, never pure black */
+  --ink-soft: #7c6450;
+  --line: #e8cf86;
+  --danger: #b3261e;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-path: var(--path);
+  --color-polaroid: var(--polaroid);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --font-ui: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-caveat: "Caveat", "Segoe Print", cursive;
+  --font-dancing: "Dancing Script", "Segoe Script", cursive;
+}
+
+html, body { background: var(--paper); color: var(--ink); }
+body {
+  font-family: var(--font-ui);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  /* faint paper grain */
+  background-image: radial-gradient(rgba(124, 100, 80, 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+:focus-visible { outline: 3px solid #1e88e5; outline-offset: 3px; border-radius: 6px; }
+
+.hand-caveat { font-family: var(--font-caveat); }
+.hand-dancing { font-family: var(--font-dancing); }
+
+.polaroid {
+  background: var(--polaroid);
+  padding: 10px 10px 0;
+  box-shadow: 0 1px 1px rgba(59, 42, 31, 0.08), 0 8px 18px -8px rgba(59, 42, 31, 0.35);
+}
+
+.field {
+  width: 100%;
+  background: var(--polaroid);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.field:focus { border-color: var(--ink-soft); outline: none; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: var(--ink); color: var(--paper);
+  border-radius: 999px; padding: 0.8rem 1.4rem;
+  font-weight: 600; font-size: 1rem;
+  transition: transform 0.15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; }
+.btn-quiet {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--ink); font-weight: 600; text-decoration: underline;
+  text-decoration-color: var(--path); text-decoration-thickness: 3px; text-underline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
