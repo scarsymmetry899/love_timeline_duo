@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Our Path",
-  description: "A private journey for the two of you.",
+  description: "A private path of memories for the two of you. Each side stays sealed until you both choose to open it.",
 };
 
 export const viewport: Viewport = {

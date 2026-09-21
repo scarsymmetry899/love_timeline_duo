@@ -5,6 +5,7 @@ import { signOut } from "@/app/actions";
 import Path from "@/components/path";
 import InvitePartner from "@/components/invite-partner";
 import MySide from "@/components/my-side";
+import ShareApp from "@/components/share-app";
 
 export default async function Home() {
   const j = await getJourney();
@@ -42,6 +43,8 @@ export default async function Home() {
       <div className="mt-10">
         <Path markers={markers} me={j.me} partner={j.partner} since={j.couple.together_since} />
       </div>
+
+      <ShareApp />
     </main>
   );
 }

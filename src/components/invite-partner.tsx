@@ -19,77 +19,65 @@ export default function InvitePartner() {
     });
   }
 
-  const text = link ? `I made a private path for just us. Join me with ${partnerEmail}: ${link}` : "";
-  const appText = "Try Our Path — a private memory trail made by two people.";
-
-  async function shareApp() {
-    const url = `${location.origin}/login`;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: "Our Path", text: appText, url });
-      } else {
-        await navigator.clipboard.writeText(`${appText} ${url}`);
-        setCopied(true);
-      }
-    } catch (shareError) {
-      if (shareError instanceof DOMException && shareError.name === "AbortError") return;
-      setError("We couldn’t open sharing. Copy the app address from your browser instead.");
-    }
-  }
+  const message = link
+    ? `I started a private path for the two of us, where we can each save our memories. Open this link and sign in with ${partnerEmail} to join me: ${link}`
+    : "";
 
   return (
     <section className="rounded-3xl bg-polaroid p-5">
-      <h2 className="text-xl font-bold">Bring your partner in</h2>
+      <h2 className="text-xl font-bold">Invite your partner</h2>
       <p className="mt-1 text-ink-soft">
-        This private link is only for your better half. It is locked to their email, so a forwarded link cannot add somebody else to your timeline.
+        They’ll get their own side of the path. Only they can accept, because the invite is tied to their email.
       </p>
       {!link ? (
-        <div className="mt-4 flex flex-col gap-3">
+        <form
+          className="mt-4 flex flex-col gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            make();
+          }}
+        >
           <label htmlFor="partner-email" className="font-semibold">Your partner’s email</label>
           <input
-            id="partner-email"
-            type="email"
-            required
-            autoComplete="email"
-            className="field"
-            value={partnerEmail}
-            onChange={(event) => setPartnerEmail(event.target.value)}
-            placeholder="yourperson@example.com"
+            id="partner-email" type="email" required autoComplete="off" className="field"
+            value={partnerEmail} onChange={(e) => setPartnerEmail(e.target.value)} placeholder="their@email.com"
           />
-          <button className="btn" type="button" onClick={make} disabled={pending || !partnerEmail}>
-            {pending ? "Creating private link…" : "Create partner-only invite"}
+          <button className="btn" disabled={pending || !partnerEmail}>
+            {pending ? "Creating invite…" : "Create invite link"}
           </button>
-          <p className="text-sm text-ink-soft">Only a person signed in with this exact email can accept.</p>
-        </div>
+        </form>
       ) : (
         <div className="mt-4 flex flex-col gap-3">
+          <p className="font-semibold">Your invite for {partnerEmail} is ready</p>
           <input readOnly value={link} className="field text-sm" onFocus={(e) => e.target.select()} aria-label="Invite link" />
-          <div className="flex flex-wrap gap-3">
-            <a className="btn" href={`https://wa.me/?text=${encodeURIComponent(text)}`} target="_blank" rel="noreferrer">
+          <div className="flex flex-wrap items-center gap-4">
+            <a className="btn" href={`https://wa.me/?text=${encodeURIComponent(message)}`} target="_blank" rel="noreferrer">
               Send on WhatsApp
             </a>
             <button
+              type="button"
               className="btn-quiet"
               onClick={async () => {
-                await navigator.clipboard.writeText(link);
-                setCopied(true);
+                try {
+                  await navigator.clipboard.writeText(message);
+                  setCopied(true);
+                } catch {
+                  setError("Copy didn’t work here. Select the link above and copy it instead.");
+                }
               }}
             >
-              {copied ? "Copied" : "Copy link"}
+              {copied ? "Message copied" : "Copy message"}
             </button>
           </div>
-          <p className="text-sm text-ink-soft">The link works once, expires in 14 days, and only accepts {partnerEmail}.</p>
+          <p className="text-sm text-ink-soft">
+            The link works once and expires in 14 days. If they don’t join, you can create a new one here.
+          </p>
+          <button type="button" className="btn-quiet self-start text-sm" onClick={() => { setLink(null); setCopied(false); }}>
+            Use a different email
+          </button>
         </div>
       )}
       {error && <p role="alert" className="mt-3 text-[var(--danger)]">{error}</p>}
-
-      <div className="mt-6 border-t border-line pt-5">
-        <p className="font-semibold">Want friends to make their own path?</p>
-        <p className="mt-1 text-sm text-ink-soft">Share the app—not your private partner link. They will register and start a completely separate timeline.</p>
-        <button className="btn-quiet mt-3 text-sm" type="button" onClick={shareApp}>
-          Share Our Path with everyone
-        </button>
-      </div>
     </section>
   );
 }

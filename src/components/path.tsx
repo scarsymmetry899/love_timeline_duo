@@ -77,7 +77,7 @@ export default function Path({
 
       <Node x={tail.x} y={tail.y - 30} H={H}>
         <p className="text-center text-sm text-ink-soft">
-          {markers.length ? "More path ahead" : "Your first moment lands on this trail."}
+          {markers.length ? "More path ahead" : "Your first memory will appear here."}
         </p>
       </Node>
     </div>
