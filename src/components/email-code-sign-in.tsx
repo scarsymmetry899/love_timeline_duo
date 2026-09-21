@@ -17,7 +17,7 @@ function friendly(message: string) {
   if (m.includes("rate limit")) return "Too many codes were sent to this address. Wait a few minutes, then try again.";
   if (m.includes("expired") || m.includes("invalid")) return "That code didn’t work. Check the latest email, or send a new code.";
   if (m.includes("email")) return "Enter a valid email address.";
-  return "Something went wrong. Please try again.";
+  return "We couldn’t send your code right now. Please try again in a few minutes.";
 }
 
 export default function EmailCodeSignIn({ next = "/", submitLabel = "Send my code", hint }: Props) {
