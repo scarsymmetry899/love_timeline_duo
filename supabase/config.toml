@@ -231,24 +231,22 @@ secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
 max_frequency = "1m0s"
 # Number of characters used in the email OTP.
-otp_length = 8
+otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
-# Use a production-ready SMTP server
-[auth.email.smtp]
-enabled = false
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# Production SMTP is configured directly in the hosted project. It is omitted
+# here so its encrypted password is never committed or overwritten by config push.
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
+# Passwordless sign-in and first-time confirmation both send a code rather
+# than a clickable link, so users can finish on any browser or device.
+[auth.email.template.magic_link]
+subject = "Your Our Path code: {{ .Token }}"
+content_path = "./supabase/templates/our-path-code.html"
+
+[auth.email.template.confirmation]
+subject = "Your Our Path code: {{ .Token }}"
+content_path = "./supabase/templates/our-path-code.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
