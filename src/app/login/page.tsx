@@ -96,7 +96,7 @@ function LoginForm() {
           {state === "sent" ? (
             <div className="mt-6 rounded-2xl bg-paper p-5">
               <p className="font-semibold">Check {email}</p>
-              <p className="mt-1 text-ink-soft">Open the sign-in link on this device. It works once and expires in an hour.</p>
+              <p className="mt-1 text-ink-soft">Keep this tab open, then open the sign-in link in this same browser and device. It works once and expires in an hour.</p>
               <button className="btn-quiet mt-4" onClick={() => setState("idle")}>Use a different email</button>
             </div>
           ) : (
@@ -118,7 +118,7 @@ function LoginForm() {
               <p className="text-center text-xs leading-relaxed text-ink-soft">New here? The same link creates your account. Your timeline stays separate until you deliberately invite your partner.</p>
               {(state === "error" || linkError) && (
                 <p className="text-[var(--danger)]" role="alert">
-                  {state === "error" ? message : "That sign-in link has expired or was opened in another browser. Send a new one."}
+                  {state === "error" ? message : "That one-time link is no longer valid. Request a new link and open it in the same browser and device that requested it."}
                 </p>
               )}
             </form>
