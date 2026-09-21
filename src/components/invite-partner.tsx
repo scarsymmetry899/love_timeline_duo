@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { createInvite } from "@/app/actions";
 
-export default function InvitePartner() {
+export default function InvitePartner({ myName, myPin }: { myName: string; myPin: string }) {
   const [partnerEmail, setPartnerEmail] = useState("");
   const [link, setLink] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -24,10 +24,16 @@ export default function InvitePartner() {
     : "";
 
   return (
-    <section className="rounded-3xl bg-polaroid p-5">
-      <h2 className="text-xl font-bold">Invite your partner</h2>
-      <p className="mt-1 text-ink-soft">
-        They’ll get their own side of the path. Only they can accept, because the invite is tied to their email.
+    <section className="invitation fade-up">
+      <div className="stamp" aria-hidden="true">
+        <span className="grid h-full w-full place-items-center rounded-sm text-2xl font-extrabold text-white" style={{ background: myPin }}>
+          {myName.trim().charAt(0).toUpperCase()}
+        </span>
+      </div>
+      <p className="type text-[0.7rem] uppercase text-ink-soft">an invitation</p>
+      <h2 className="hand-caveat mt-1 pr-20 text-4xl leading-none">Save a spot on the path for your person</h2>
+      <p className="mt-3 pr-4 text-sm leading-relaxed text-ink-soft">
+        They get their own side, in their own handwriting. The link only works for the email you enter.
       </p>
       {!link ? (
         <form

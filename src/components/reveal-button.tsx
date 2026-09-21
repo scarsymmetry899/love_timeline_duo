@@ -3,14 +3,35 @@
 import { useState, useTransition } from "react";
 import { voteReveal } from "@/app/actions";
 
-export default function RevealButton({ id, iVoted, partnerVoted }: { id: string; iVoted: boolean; partnerVoted: boolean }) {
+type Props = {
+  id: string;
+  iVoted: boolean;
+  partnerVoted: boolean;
+  /** True when the signed-in person wrote this memory. */
+  mine?: boolean;
+  otherName?: string | null;
+  quiet?: boolean;
+};
+
+// A memory opens once both people have voted. Either of you can go first.
+export default function RevealButton({ id, iVoted, partnerVoted, mine = false, otherName, quiet = true }: Props) {
   const [error, setError] = useState("");
   const [pending, start] = useTransition();
-  if (iVoted) return <p className="text-sm text-ink-soft">You’re ready. Waiting for them to open it too.</p>;
+  const them = otherName || "them";
+
+  if (iVoted) {
+    return <p className="text-sm text-ink-soft">You’re ready. Waiting for {them} to open it too.</p>;
+  }
+  const label = pending
+    ? "Opening…"
+    : partnerVoted
+      ? mine ? `${them} wants to see this. Open it together` : `${them} is ready. Open it now`
+      : mine ? `I’m ready to share this with ${them}` : "I’m ready to open this";
+
   return (
     <div>
       <button
-        className="btn-quiet text-sm"
+        className={quiet ? "btn-quiet text-sm" : "btn"}
         disabled={pending}
         onClick={() => start(async () => {
           setError("");
@@ -18,7 +39,7 @@ export default function RevealButton({ id, iVoted, partnerVoted }: { id: string;
           if (result?.error) setError(result.error);
         })}
       >
-        {pending ? "Opening…" : partnerVoted ? "They’re ready. Open it now" : "I’m ready to open this"}
+        {label}
       </button>
       {error && <p role="alert" className="mt-2 text-sm text-[var(--danger)]">{error}</p>}
     </div>

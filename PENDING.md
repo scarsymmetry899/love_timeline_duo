@@ -28,14 +28,15 @@ In Authentication → URL Configuration, check:
 - Site URL: `https://love-timeline-duo.vercel.app`
 - Redirect URLs include `https://love-timeline-duo.vercel.app/**` and `http://localhost:3000/**`
 
-## 3. Test after onboarding
+## 3. Test the memory features
 
-This hasn't been tested yet. After starting or joining a journey, check:
+The memory features have only been checked against sample data, not with a real account. Try these:
 
-- The home page shows the journey name, the days-together counter, your side, the path and the share button.
-- Before your partner joins, the invite card is visible. Once they join, it disappears.
-- Moments on each side stay hidden from the partner until both of you vote to reveal them.
-- Sign out and sign back in.
+- Add a memory with photos, one with only text, and one with a Spotify or YouTube link. Each should appear on the path and open to its own page.
+- Delete a memory. Its photos should be removed from storage too.
+- Change your handwriting and pin colour from the avatar menu.
+- Once your partner can sign in: check that their memories show as sealed envelopes, that either of you can vote to open one, and that it opens once you both have.
+- The path adds milestone flags (7, 30, 100 days and so on) from the "together since" date.
 
 ## 4. Security warnings to review (low priority)
 

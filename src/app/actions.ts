@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 const PENS = new Set(["caveat", "dancing"]);
@@ -131,5 +131,98 @@ export async function voteReveal(momentId: string) {
   const { data, error } = await supabase.rpc("vote_reveal", { m: momentId });
   if (error) return { error: "We couldn’t record your reveal. Please try again." };
   revalidatePath("/");
+  refresh();
   return { revealed: data as boolean };
+}
+
+export type NewMoment = {
+  date: string;
+  heading: string;
+  body: string;
+  place: string;
+  link: string;
+  photoCount: number;
+};
+
+function linkProvider(url: URL) {
+  const host = url.hostname.replace(/^www\./, "");
+  if (host.endsWith("spotify.com")) return "spotify";
+  if (host === "youtu.be" || host.endsWith("youtube.com")) return "youtube";
+  return "web";
+}
+
+// Creates the moment row (and its link). Photos are uploaded straight from the
+// browser afterwards, into `couple/moment/…`, which storage policies allow only
+// for the moment's author.
+export async function createMoment(input: NewMoment) {
+  const supabase = await createClient();
+  const uid = await getUserId(supabase);
+  if (!uid) return { error: "Your sign-in expired. Please sign in again." };
+
+  const heading = input.heading.trim();
+  const body = input.body.trim();
+  const place = input.place.trim();
+  const rawLink = input.link.trim();
+  if (!heading && !body && input.photoCount < 1) {
+    return { error: "Add a photo, a title or a few words, so there’s something to remember." };
+  }
+  if (!validDate(input.date) || Date.parse(`${input.date}T00:00:00Z`) > Date.now() + 86_400_000) {
+    return { error: "Choose the day this happened. It can’t be in the future." };
+  }
+  if (heading.length > 120 || place.length > 120) return { error: "Please use a shorter title or place." };
+  if (body.length > 5000) return { error: "That story is a little long. Keep it under 5,000 characters." };
+
+  let link: URL | null = null;
+  if (rawLink) {
+    try {
+      link = new URL(/^https?:\/\//i.test(rawLink) ? rawLink : `https://${rawLink}`);
+    } catch {
+      return { error: "That link doesn’t look right. Paste the full address." };
+    }
+    if (!["http:", "https:"].includes(link.protocol) || link.href.length > 500) {
+      return { error: "That link doesn’t look right. Paste the full address." };
+    }
+  }
+
+  const { data: member } = await supabase
+    .from("couple_members").select("couple_id").eq("user_id", uid).single();
+  if (!member) return { error: "Start your path first, then add memories to it." };
+
+  const { data: moment, error } = await supabase
+    .from("moments")
+    .insert({
+      couple_id: member.couple_id,
+      moment_date: input.date,
+      heading: heading || null,
+      body_original: body || null,
+      body: body || null,
+      place: place || null,
+    })
+    .select("id")
+    .single();
+  if (error || !moment) return { error: "We couldn’t save this memory. Please try again." };
+
+  if (link) {
+    await supabase.from("moment_links").insert({ moment_id: moment.id, url: link.href, provider: linkProvider(link) });
+  }
+  revalidatePath("/");
+  return { id: moment.id as string, coupleId: member.couple_id as string };
+}
+
+export async function deleteMoment(momentId: string) {
+  const supabase = await createClient();
+  const uid = await getUserId(supabase);
+  if (!uid) return { error: "Your sign-in expired. Please sign in again." };
+  if (!UUID.test(momentId)) return { error: "That moment is invalid." };
+
+  const { data: media } = await supabase
+    .from("moment_media").select("storage_path,display_path").eq("moment_id", momentId).eq("author_id", uid);
+  const paths = (media ?? []).flatMap((m) => [m.storage_path, m.display_path].filter(Boolean) as string[]);
+  if (paths.length) await supabase.storage.from("moments").remove(paths);
+
+  const { error, count } = await supabase
+    .from("moments").delete({ count: "exact" }).eq("id", momentId).eq("author_id", uid);
+  if (error || !count) return { error: "We couldn’t delete this memory. Please try again." };
+  revalidatePath("/");
+  redirect("/");
 }
