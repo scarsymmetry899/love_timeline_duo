@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import EmailCodeSignIn from "@/components/email-code-sign-in";
-import { signOutTo } from "@/app/actions";
+import SwitchEmailButton from "@/components/switch-email-button";
 import JoinForm from "./join-form";
 
 type Preview = {
@@ -71,11 +71,9 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
         <div className="mt-8 rounded-2xl bg-polaroid p-5">
           <p className="font-semibold">This invite was sent to a different email</p>
           <p className="mt-1 text-ink-soft">
-            You’re signed in as {myEmail ?? "another account"}, but {inviter} invited {invite.email_hint ?? "someone else"}. Sign out and sign in with that address to join.
+            You’re signed in as {myEmail ?? "another account"}, but {inviter} invited {invite.email_hint ?? "someone else"}. Switch to that email to join. If you’re testing both sides yourself, open this link in a private window instead.
           </p>
-          <form action={signOutTo.bind(null, here)} className="mt-4">
-            <button className="btn">Switch email</button>
-          </form>
+          <div className="mt-4"><SwitchEmailButton returnTo={here} /></div>
         </div>
       )}
 
@@ -87,9 +85,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
           </p>
           <div className="mt-4 flex flex-wrap gap-4">
             <Link href="/" className="btn">Go to my path</Link>
-            <form action={signOutTo.bind(null, here)}>
-              <button className="btn-quiet">Switch email</button>
-            </form>
+            <SwitchEmailButton returnTo={here} quiet />
           </div>
         </div>
       )}
