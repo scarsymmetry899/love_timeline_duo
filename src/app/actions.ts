@@ -24,18 +24,18 @@ export async function createJourney(_: unknown, form: FormData) {
   const myName = String(form.get("my_name") ?? "").trim();
   const since = String(form.get("together_since") ?? "") || null;
   if (!myName) return { error: "Add your name so your partner knows the invite is from you." };
-  if (myName.length > 80 || name.length > 100) return { error: "Please use a shorter name." };
+  if (myName.length > 80 || name.length > 100) return { error: "Use a name under 80 characters, and a path name under 100." };
   if (since && !validDate(since)) return { error: "Choose the date you got together, or leave it empty." };
 
   const uid = await getUserId(supabase);
   if (!uid) return { error: "Your sign-in expired. Please sign in again." };
   const { error: profileError } = await supabase.from("profiles").update({ display_name: myName }).eq("id", uid);
-  if (profileError) return { error: "We couldn’t save your name. Please try again." };
+  if (profileError) return { error: "Unable to save your name. Check your connection and try again." };
 
   const { error } = await supabase
     .from("couples")
     .insert({ name: name || null, together_since: since });
-  if (error) return { error: "We couldn’t start your path. Please try again." };
+  if (error) return { error: "Unable to start your path. Check your connection and try again." };
   redirect("/");
 }
 
@@ -68,7 +68,7 @@ export async function createInvite(partnerEmail: string) {
     .insert({ couple_id: member.couple_id, intended_email: email })
     .select("code")
     .single();
-  if (error) return { error: "We couldn’t create the invite. Please try again." };
+  if (error) return { error: "Unable to create the invite. Check your connection and try again." };
   return { code: data.code as string };
 }
 
@@ -77,11 +77,11 @@ export async function acceptInvite(code: string, myName: string) {
   const uid = await getUserId(supabase);
   const cleanName = myName.trim();
   if (!uid) return { error: "Your sign-in expired. Please sign in again." };
-  if (!INVITE_CODE.test(code)) return { error: "This invite link is invalid." };
-  if (!cleanName || cleanName.length > 80) return { error: "Add a name under 80 characters." };
+  if (!INVITE_CODE.test(code)) return { error: "This invite link is incomplete. Open the full link your partner sent." };
+  if (!cleanName || cleanName.length > 80) return { error: "Add your name, under 80 characters." };
 
   const { error: profileError } = await supabase.from("profiles").update({ display_name: cleanName }).eq("id", uid);
-  if (profileError) return { error: "We couldn’t save your name. Please try again." };
+  if (profileError) return { error: "Unable to save your name. Check your connection and try again." };
 
   const { error } = await supabase.rpc("accept_invite", { invite_code: code });
   if (error) return { error: inviteError(error.message) };
@@ -92,10 +92,10 @@ export async function updateMySide(pen: string, pin: string) {
   const supabase = await createClient();
   const uid = await getUserId(supabase);
   if (!uid) return { error: "Your sign-in expired. Please sign in again." };
-  if (!PENS.has(pen) || !PINS.has(pin)) return { error: "Choose one of the available styles." };
+  if (!PENS.has(pen) || !PINS.has(pin)) return { error: "Choose one of the handwriting and pin options shown." };
   const { error } = await supabase
     .from("couple_members").update({ pen_style: pen, pin_color: pin }).eq("user_id", uid);
-  if (error) return { error: "We couldn’t save your style. Please try again." };
+  if (error) return { error: "Unable to save your handwriting and pin. Check your connection and try again." };
   revalidatePath("/");
   return { ok: true };
 }
@@ -107,8 +107,8 @@ function inviteError(message: string) {
   if (m.includes("expired")) return "This invite has expired. Ask your partner for a new link.";
   if (m.includes("already part of")) return "This account already has its own path, so it can’t join another one.";
   if (m.includes("two people")) return "This path already has two people on it.";
-  if (m.includes("not found")) return "We couldn’t find this invite. Check you opened the full link.";
-  return "We couldn’t join you to this path. Please try again.";
+  if (m.includes("not found")) return "Unable to find this invite. Check that you opened the full link.";
+  return "Unable to join this path. Check your connection and try again.";
 }
 
 export async function signOutTo(path: string) {
@@ -127,9 +127,9 @@ export async function voteReveal(momentId: string) {
   const supabase = await createClient();
   const uid = await getUserId(supabase);
   if (!uid) return { error: "Your sign-in expired. Please sign in again." };
-  if (!UUID.test(momentId)) return { error: "That moment is invalid." };
+  if (!UUID.test(momentId)) return { error: "Unable to find this memory. Refresh the page and try again." };
   const { data, error } = await supabase.rpc("vote_reveal", { m: momentId });
-  if (error) return { error: "We couldn’t record your reveal. Please try again." };
+  if (error) return { error: "Unable to open this memory right now. Check your connection and try again." };
   revalidatePath("/");
   return { revealed: data as boolean };
 }

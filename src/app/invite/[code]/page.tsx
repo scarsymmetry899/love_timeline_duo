@@ -33,57 +33,58 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
   if (!invite || !invite.valid) {
     return (
       <Shell>
-        <h1 className="text-3xl font-extrabold tracking-tight">This invite has already been used or has expired</h1>
-        <p className="mt-2 text-lg text-ink-soft">
+        <h1 className="text-title font-extrabold">This invite has already been used or has expired</h1>
+        <p className="mt-3 text-lead text-ink-muted">
           Invite links work once and last 14 days. Ask your partner to create a new one from their path.
         </p>
-        <Link href="/login" className="btn-quiet mt-8">Start your own path instead</Link>
+        <Link href="/login" className="btn-quiet mt-6 self-start">Start your own path instead</Link>
       </Shell>
     );
   }
 
   return (
     <Shell>
-      <div className="polaroid mx-auto mb-10 w-60 rotate-[3deg]">
-        <div className="grid aspect-square place-items-center bg-paper-deep px-4 text-center">
-          <span className="hand-caveat text-5xl leading-tight">you + {invite.inviter_name ?? "them"}</span>
+      <div className="polaroid mx-auto mb-10 w-60 rotate-[3deg]" aria-hidden="true">
+        <div className="photo-well grid aspect-square place-items-center overflow-hidden bg-sunken p-4 text-center">
+          <span className="hand-caveat text-hand-lg [overflow-wrap:anywhere]">you + {invite.inviter_name ?? "them"}</span>
         </div>
-        <p className="hand-caveat py-3 text-center text-2xl">{invite.couple_name ?? "our path"}</p>
+        <p className="hand-caveat truncate py-3 text-center text-hand">{invite.couple_name ?? "our path"}</p>
       </div>
 
-      <h1 className="text-3xl font-extrabold tracking-tight">{inviter} started a path for the two of you</h1>
-      <p className="mt-2 text-lg text-ink-soft">
+      <h1 className="text-title font-extrabold">{inviter} started a path for the two of you</h1>
+      <p className="mt-3 text-lead text-ink-muted">
         You’ll each add memories from your own side. Neither of you can read the other’s until you both choose to open them.
       </p>
 
       {!userId && (
-        <div className="mt-8">
-          <p className="mb-4 rounded-2xl bg-polaroid p-4 text-sm">
+        <div className="panel mt-8">
+          <h2 className="text-heading font-extrabold">Sign in to join</h2>
+          <p className="mt-2 text-ink-muted">
             {invite.email_hint
-              ? <>This invite is for <strong>{invite.email_hint}</strong>. Sign in with that email to join.</>
-              : <>Sign in with your email to join.</>}
+              ? <>This invite is for <strong className="text-ink"><bdi>{invite.email_hint}</bdi></strong>. Use that email and we’ll send you a 6-digit code.</>
+              : <>Use your email and we’ll send you a 6-digit code.</>}
           </p>
-          <EmailCodeSignIn next={here} />
+          <div className="mt-5"><EmailCodeSignIn next={here} /></div>
         </div>
       )}
 
       {userId && invite.for_you === false && (
-        <div className="mt-8 rounded-2xl bg-polaroid p-5">
-          <p className="font-semibold">This invite was sent to a different email</p>
-          <p className="mt-1 text-ink-soft">
+        <div className="panel mt-8">
+          <h2 className="text-heading font-extrabold">This invite was sent to a different email</h2>
+          <p className="mt-2 text-ink-muted">
             You’re signed in as {myEmail ?? "another account"}, but {inviter} invited {invite.email_hint ?? "someone else"}. Switch to that email to join. If you’re testing both sides yourself, open this link in a private window instead.
           </p>
-          <div className="mt-4"><SwitchEmailButton returnTo={here} /></div>
+          <div className="mt-5"><SwitchEmailButton returnTo={here} /></div>
         </div>
       )}
 
       {userId && invite.for_you !== false && alreadyOnAPath && (
-        <div className="mt-8 rounded-2xl bg-polaroid p-5">
-          <p className="font-semibold">You already have a path with this account</p>
-          <p className="mt-1 text-ink-soft">
+        <div className="panel mt-8">
+          <h2 className="text-heading font-extrabold">You already have a path with this account</h2>
+          <p className="mt-2 text-ink-muted">
             Each account belongs to one path. To join {inviter}, sign in with the email they invited instead.
           </p>
-          <div className="mt-4 flex flex-wrap gap-4">
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link href="/" className="btn">Go to my path</Link>
             <SwitchEmailButton returnTo={here} quiet />
           </div>
@@ -96,5 +97,5 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-16">{children}</main>;
+  return <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-5 py-14"><div className="enter flex flex-col">{children}</div></main>;
 }

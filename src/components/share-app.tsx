@@ -17,15 +17,15 @@ export default function ShareApp() {
       }
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") return;
-      setNote("Sharing didn’t open. You can copy the address from your browser instead.");
+      setNote("Unable to open sharing. Copy the address from your browser instead.");
     }
   }
   return (
-    <footer className="mt-16 border-t border-line pt-6 text-center text-sm text-ink-soft">
-      <p>Know a couple who’d love this?</p>
-      <button type="button" className="btn-quiet mt-2" onClick={share}>Share Our Path with them</button>
-      <p className="mt-2">They’ll start their own private path. Nothing of yours is shared.</p>
-      {note && <p className="mt-2" role="status">{note}</p>}
-    </footer>
+    <section className="text-center" aria-labelledby="share-title">
+      <h2 id="share-title" className="font-semibold">Know a couple who’d love this?</h2>
+      <p className="mt-1 text-caption text-ink-muted">They’ll start their own private path. Nothing of yours is shared.</p>
+      <button type="button" className="btn-quiet mt-1" onClick={share}>Share Our Path</button>
+      <p role="status" className="text-caption text-ink-muted">{note}</p>
+    </section>
   );
 }
