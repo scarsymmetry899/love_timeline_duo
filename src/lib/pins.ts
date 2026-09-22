@@ -63,3 +63,10 @@ export function upcomingMilestones(since: string, today: string, count = 2): Mil
   }
   return out.sort((a, b) => a.inDays - b.inDays).slice(0, count);
 }
+
+/** "2 Jan 2025": short enough for a Polaroid caption in handwriting. */
+export function shortDay(iso: string) {
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return `${d} ${MONTHS[m - 1].slice(0, 3)} ${y}`;
+}

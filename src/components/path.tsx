@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import RevealButton from "./reveal-button";
 import PathPolaroid from "./path-polaroid";
 import type { Member, PathMarker } from "@/lib/journey";
-import { dayNumber, formatDay, penClass, pinDisplay, upcomingMilestones } from "@/lib/pins";
+import { dayNumber, formatDay, penClass, pinDisplay, shortDay, upcomingMilestones } from "@/lib/pins";
 
 const fmt = formatDay;
 
@@ -103,7 +103,7 @@ export default function Path({
                       pen={owner?.pen_style}
                       pin={owner?.pin_color}
                       date={m.moment_date}
-                      dateLabel={fmt(m.moment_date)}
+                      dateLabel={shortDay(m.moment_date)}
                       day={since ? dayNumber(since, m.moment_date) : null}
                     />
                   ) : (
@@ -115,7 +115,7 @@ export default function Path({
                       </p>
                       <p className="mt-1 text-caption text-ink-muted">
                         {since && <>Day {dayNumber(since, m.moment_date).toLocaleString("en-IN")} · </>}
-                        <time dateTime={m.moment_date}>{fmt(m.moment_date)}</time>
+                        <time dateTime={m.moment_date}>{shortDay(m.moment_date)}</time>
                       </p>
                       <p className="mt-1 text-caption font-semibold">Sealed</p>
                       <div className="mt-2"><RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} /></div>
@@ -132,7 +132,7 @@ export default function Path({
                 <p className="text-caption font-semibold text-ink-muted">Coming up</p>
                 <p className={`${penClass(me.pen_style)} text-hand`}>{a.label}</p>
                 <p className="text-caption text-ink-muted">
-                  <time dateTime={a.date}>{fmt(a.date)}</time>
+                  <time dateTime={a.date}>{shortDay(a.date)}</time>
                   <br />{a.inDays === 0 ? "today" : a.inDays === 1 ? "tomorrow" : `in ${a.inDays} days`}
                 </p>
               </div>

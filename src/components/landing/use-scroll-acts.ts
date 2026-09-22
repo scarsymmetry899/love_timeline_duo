@@ -6,7 +6,6 @@ import { useEffect } from "react";
  * One shared scroll loop for the landing page.
  * Every element with [data-act] gets --p (0..1): how far the reader has
  * scrolled through that act's pinned travel. CSS does the rest.
- * The trail [data-trail] gets --trail-p for the whole page.
  * Under reduced motion nothing is written, and CSS shows static compositions.
  */
 export function useScrollActs() {
@@ -25,11 +24,6 @@ export function useScrollActs() {
         const rounded = Math.round(p * 1000) / 1000;
         if (el.style.getPropertyValue("--p") !== String(rounded)) el.style.setProperty("--p", String(rounded));
       });
-      const doc = document.documentElement;
-      const pageP = Math.min(1, Math.max(0, (window.scrollY + vh * 0.6) / doc.scrollHeight));
-      document.querySelectorAll<HTMLElement>("[data-trail]").forEach((el) =>
-        el.style.setProperty("--trail-p", String(Math.round(pageP * 1000) / 1000)),
-      );
     };
 
     const request = () => {
