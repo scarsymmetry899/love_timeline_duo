@@ -9,8 +9,8 @@ export default function StartForm() {
   return (
     <main className="mx-auto max-w-md px-5 pb-16 pt-12">
       <div className="enter">
-        <p className="hand-caveat text-hand text-ink-muted">step one of two</p>
-        <h1 className="mt-1 text-title font-extrabold">Start your path</h1>
+        <p className="eyebrow">Step 1 of 2</p>
+        <h1 className="mt-1 text-title">Start your path</h1>
         <p className="mt-3 text-lead text-ink-muted">
           Set up the basics, then invite your partner on the next screen. Anything you add stays on your side until you both choose to open it.
         </p>

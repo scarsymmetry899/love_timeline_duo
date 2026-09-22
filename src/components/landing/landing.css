@@ -54,7 +54,7 @@
 
 /* ---------- 1 · hero: copy + a stack of three planes ---------- */
 .hero-grid { align-content: center; justify-items: center; }
-.hero-copy { justify-self: stretch; max-width: 34rem; }
+.hero-copy { justify-self: stretch; max-width: 36rem; }
 .hero-stack {
   position: relative;
   width: min(100%, 34rem, 62svh);
@@ -89,7 +89,7 @@
   row-gap: 1rem;
 }
 .two-title { grid-area: title; text-align: center; opacity: var(--title); transform: translateY(calc((1 - var(--title)) * 12px)); }
-.two-photo { grid-area: photo; width: min(100%, 26rem, 44svh * 1.2); rotate: 1.5deg; }
+.two-photo { grid-area: photo; width: min(100%, 27rem, 46svh * 1.2); rotate: 1.5deg; }
 .caption-card {
   display: flex; flex-direction: column; gap: 0.2rem;
   width: min(100%, 19rem);
@@ -193,13 +193,13 @@
 /* ---------- wider screens: side-by-side compositions ---------- */
 @media (min-width: 56rem) {
   .hero-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: center; }
-  .hero-stack { width: min(100%, 36rem, 76svh); }
+  .hero-stack { width: min(100%, 40rem, 80svh); }
   .two-grid {
     grid-template-columns: 1fr auto 1fr;
     grid-template-areas: "title title title" "his photo hers";
     align-items: center; column-gap: clamp(1rem, 3vw, 3rem);
   }
-  .two-photo { width: min(30rem, 36vw, 60svh * 1.2); }
+  .two-photo { width: min(32rem, 36vw, 62svh * 1.2); }
   .caption-card--his { justify-self: end; margin-block-end: 18%; }
   .caption-card--hers { justify-self: start; margin-block-start: 18%; }
   .caption-card--his { transform: translateX(calc((1 - var(--his)) * -3rem)); }
@@ -207,7 +207,7 @@
   .sealed-grid { align-items: center; }
   .letter { width: min(34rem, 44vw, 48svh); }
   .sealed-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .envelope { width: clamp(10rem, 18vw, 17rem); }
+  .envelope { width: clamp(11rem, 21vw, 19rem); }
 }
 
 /* short, wide screens (small laptops): keep everything inside the frame */

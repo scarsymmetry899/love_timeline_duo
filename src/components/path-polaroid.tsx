@@ -24,12 +24,12 @@ export default function PathPolaroid({
   }, [id]);
 
   return (
-    <figure ref={ref} className="polaroid relative">
-      <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full ring-2 ring-surface" style={{ background: pinDisplay(pin) }} aria-hidden="true" />
-      <div className="reveal-photo photo-well aspect-square bg-sunken" />
-      <figcaption className="reveal-caption py-2 text-center">
-        <span className="block text-caption font-semibold text-ink-muted">{who}{day ? ` · Day ${day.toLocaleString("en-IN")}` : ""}</span>
-        <time dateTime={date} className={`${penClass(pen)} block text-hand`}>{dateLabel}</time>
+    <figure ref={ref} className="polaroid" style={{ "--pin": pinDisplay(pin) } as React.CSSProperties}>
+      <span className="tape tape--top" aria-hidden="true" />
+      <div className="reveal-photo photo-well aspect-square" />
+      <figcaption className="reveal-caption px-1 pb-1 pt-2 text-center">
+        <time dateTime={date} className={`${penClass(pen)} block text-hand leading-none`}>{dateLabel}</time>
+        <span className="eyebrow mt-1 block">{who}{day ? ` · Day ${day.toLocaleString("en-IN")}` : ""}</span>
       </figcaption>
       <span ref={statusRef} role="status" className="sr-only" />
     </figure>

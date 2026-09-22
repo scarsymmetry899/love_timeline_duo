@@ -81,10 +81,10 @@ export default function Path({
 
         <ol ref={listRef} className="relative flex flex-col gap-14 pb-28">
           <li className="flex justify-center">
-            <div data-stop className="flex flex-col items-center rounded-2xl bg-page px-4 py-2 text-center">
-              <span className="h-4 w-4 rounded-full ring-4 ring-surface" style={{ background: pinDisplay(me.pin_color) }} aria-hidden="true" />
-              <p className={`${penClass(me.pen_style)} mt-1 text-hand-lg`}>day one</p>
-              {since && <p className="text-caption text-ink-muted"><time dateTime={since}>{fmt(since)}</time></p>}
+            <div data-stop className="flex flex-col items-center px-4 text-center">
+              <span className="pin" style={{ "--pin": pinDisplay(me.pin_color) } as React.CSSProperties} aria-hidden="true" />
+              <p className={`${penClass(me.pen_style)} mt-2 text-hand-lg`}>day one</p>
+              {since && <p className="eyebrow mt-1"><time dateTime={since}>{fmt(since)}</time></p>}
             </div>
           </li>
 
@@ -107,18 +107,19 @@ export default function Path({
                       day={since ? dayNumber(since, m.moment_date) : null}
                     />
                   ) : (
-                    <article className="panel text-center" aria-label={`Sealed memory from ${who}, ${fmt(m.moment_date)}`}>
-                      <span className="mx-auto mb-3 block h-2.5 w-10 rounded-full" style={{ background: pinDisplay(owner?.pin_color) }} aria-hidden="true" />
-                      <p className="leading-snug">
-                        <span className={`${penClass(owner?.pen_style)} text-hand`}>{who}</span>
-                        <br />added a memory here
-                      </p>
-                      <p className="mt-1 text-caption text-ink-muted">
+                    <article
+                      className="panel text-center"
+                      style={{ "--pin": pinDisplay(owner?.pin_color) } as React.CSSProperties}
+                      aria-label={`Sealed memory from ${who}, ${fmt(m.moment_date)}`}
+                    >
+                      <span className="wax mx-auto mb-3" aria-hidden="true">{(who[0] ?? "?").toUpperCase()}</span>
+                      <p className={`${penClass(owner?.pen_style)} text-hand leading-none`}>{who}</p>
+                      <p className="mt-1 text-caption text-ink-muted">sealed a memory here</p>
+                      <p className="eyebrow mt-2">
                         {since && <>Day {dayNumber(since, m.moment_date).toLocaleString("en-IN")} · </>}
                         <time dateTime={m.moment_date}>{shortDay(m.moment_date)}</time>
                       </p>
-                      <p className="mt-1 text-caption font-semibold">Sealed</p>
-                      <div className="mt-2"><RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} /></div>
+                      <div className="mt-3"><RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} /></div>
                     </article>
                   )}
                 </div>
@@ -128,10 +129,10 @@ export default function Path({
 
           {ahead.map((a, i) => (
             <li key={a.date} className={`flex ${(markers.length + i) % 2 ? "justify-end" : "justify-start"}`}>
-              <div data-stop className="w-[min(12rem,58%)] rounded-md border-2 border-dashed border-edge bg-page/80 p-4 text-center">
-                <p className="text-caption font-semibold text-ink-muted">Coming up</p>
-                <p className={`${penClass(me.pen_style)} text-hand`}>{a.label}</p>
-                <p className="text-caption text-ink-muted">
+              <div data-stop className="ahead-stop w-[min(12rem,58%)] p-4 text-center">
+                <p className="eyebrow">Coming up</p>
+                <p className={`${penClass(me.pen_style)} mt-1 text-hand`}>{a.label}</p>
+                <p className="mt-1 text-caption text-ink-muted">
                   <time dateTime={a.date}>{shortDay(a.date)}</time>
                   <br />{a.inDays === 0 ? "today" : a.inDays === 1 ? "tomorrow" : `in ${a.inDays} days`}
                 </p>

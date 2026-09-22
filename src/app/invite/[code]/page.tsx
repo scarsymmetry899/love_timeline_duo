@@ -33,7 +33,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
   if (!invite || !invite.valid) {
     return (
       <Shell>
-        <h1 className="text-title font-extrabold">This invite has already been used or has expired</h1>
+        <h1 className="text-title">This invite has already been used or has expired</h1>
         <p className="mt-3 text-lead text-ink-muted">
           Invite links work once and last 14 days. Ask your partner to create a new one from their path.
         </p>
@@ -51,14 +51,14 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
         <p className="hand-caveat truncate py-3 text-center text-hand">{invite.couple_name ?? "our path"}</p>
       </div>
 
-      <h1 className="text-title font-extrabold">{inviter} started a path for the two of you</h1>
+      <h1 className="text-title">{inviter} started a path for the two of you</h1>
       <p className="mt-3 text-lead text-ink-muted">
         You’ll each add memories from your own side. Neither of you can read the other’s until you both choose to open them.
       </p>
 
       {!userId && (
         <div className="panel mt-8">
-          <h2 className="text-heading font-extrabold">Sign in to join</h2>
+          <h2 className="text-heading">Sign in to join</h2>
           <p className="mt-2 text-ink-muted">
             {invite.email_hint
               ? <>This invite is for <strong className="text-ink"><bdi>{invite.email_hint}</bdi></strong>. Use that email and we’ll send you a 6-digit code.</>
@@ -70,7 +70,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
 
       {userId && invite.for_you === false && (
         <div className="panel mt-8">
-          <h2 className="text-heading font-extrabold">This invite was sent to a different email</h2>
+          <h2 className="text-heading">This invite was sent to a different email</h2>
           <p className="mt-2 text-ink-muted">
             You’re signed in as {myEmail ?? "another account"}, but {inviter} invited {invite.email_hint ?? "someone else"}. Switch to that email to join. If you’re testing both sides yourself, open this link in a private window instead.
           </p>
@@ -80,7 +80,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
 
       {userId && invite.for_you !== false && alreadyOnAPath && (
         <div className="panel mt-8">
-          <h2 className="text-heading font-extrabold">You already have a path with this account</h2>
+          <h2 className="text-heading">You already have a path with this account</h2>
           <p className="mt-2 text-ink-muted">
             Each account belongs to one path. To join {inviter}, sign in with the email they invited instead.
           </p>

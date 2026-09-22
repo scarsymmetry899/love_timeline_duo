@@ -38,8 +38,8 @@ export default function InvitePartner() {
 
   return (
     <section className="panel" aria-labelledby="invite-title">
-      <p className="hand-caveat text-hand text-ink-muted">step two of two</p>
-      <h2 id="invite-title" className="text-heading font-extrabold">Invite your partner</h2>
+      <p className="eyebrow">Step 2 of 2</p>
+      <h2 id="invite-title" className="text-heading">Invite your partner</h2>
       <p className="mt-2 text-ink-muted">
         They’ll get their own side of the path. Only they can accept, because the invite is tied to their email.
       </p>

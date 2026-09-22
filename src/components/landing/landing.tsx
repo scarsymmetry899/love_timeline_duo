@@ -39,10 +39,10 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
         <div className="stage hero-grid">
           <Trail d="M8 100 C 30 70, 20 40, 55 35 S 90 10, 96 -5" />
           <div className="hero-copy">
-            <p className="hand-caveat text-hand text-ink-muted">just the two of you</p>
-            <h1 id="hero-title" className="text-display font-extrabold">Our Path</h1>
+            <p className="eyebrow">A private path for two</p>
+            <h1 id="hero-title" className="mt-2 text-display">Our&nbsp;Path</h1>
             <p className="measure mt-4 text-lead text-ink-muted">
-              A private trail of your relationship, written from both sides.
+              A trail of your relationship, written from both sides. Add the moments you want to keep; theirs stay sealed until you open them together.
             </p>
             <a href="#sign-in" className="btn mt-6">Get started</a>
           </div>
@@ -65,17 +65,17 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
       <section data-act className="act act--two" aria-labelledby="two-title">
         <div className="stage two-grid">
           <Trail d="M50 -5 C 20 25, 80 45, 50 60 S 30 90, 45 105" />
-          <h2 id="two-title" className="two-title text-title font-extrabold">Same day. Two memories.</h2>
+          <h2 id="two-title" className="two-title text-title">Same day. Two memories.</h2>
           <figure className="two-photo polaroid">
             <Photo src={PHOTO.seaWalk} alt="A couple walking hand in hand along the shore" sizes="(max-width: 960px) 80vw, 460px" />
             <figcaption className="hand-caveat hero-caption">day 412, Gokarna</figcaption>
           </figure>
           <p className="caption-card caption-card--his">
-            <span className="text-caption font-semibold text-ink-muted">Tj remembers</span>
+            <span className="eyebrow">Tj remembers</span>
             <span className="hand-caveat caption-card__quote">“the rain ruined everything”</span>
           </p>
           <p className="caption-card caption-card--hers">
-            <span className="text-caption font-semibold text-ink-muted">Mira remembers</span>
+            <span className="eyebrow">Mira remembers</span>
             <span className="hand-dancing caption-card__quote">“best day of the whole trip”</span>
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
         <div className="stage sealed-grid">
           <Trail d="M45 -5 C 60 30, 20 50, 60 70 S 70 95, 55 105" />
           <div className="sealed-copy">
-            <h2 id="sealed-title" className="text-title font-extrabold">Each side stays sealed</h2>
+            <h2 id="sealed-title" className="text-title">Each side stays sealed</h2>
             <p className="measure mt-4 text-lead text-ink-muted">
               You write what you remember. So do they. Neither of you can read the other’s side until you both decide to.
             </p>
@@ -122,7 +122,7 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
             </div>
           </div>
           <div className="peak-copy">
-            <h2 id="peak-title" className="text-title font-extrabold">Opened together</h2>
+            <h2 id="peak-title" className="text-title">Opened together</h2>
             <p className="measure mx-auto mt-3 text-lead text-ink-muted">
               When you’re both ready, you each tap reveal. Then you finally get to see how they remembered it.
             </p>
@@ -133,12 +133,12 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
       {/* 5 · Commitment: the path keeps going */}
       <section id="sign-in" className="act act--close scroll-mt-4" aria-labelledby="sign-in-title">
         <ol className="ahead" aria-label="The path ahead">
-          <li className="ahead__stop"><span className="hand-caveat text-hand">day 730</span><span className="text-caption text-ink-muted">two years</span></li>
-          <li className="ahead__stop"><span className="hand-caveat text-hand">day 1,000</span><span className="text-caption text-ink-muted">1,000 days</span></li>
-          <li className="ahead__stop"><span className="hand-caveat text-hand">and after</span><span className="text-caption text-ink-muted">still becoming</span></li>
+          <li className="ahead__stop"><span className="hand-caveat text-hand">day 730</span><span className="eyebrow mt-1">two years</span></li>
+          <li className="ahead__stop"><span className="hand-caveat text-hand">day 1,000</span><span className="eyebrow mt-1">1,000 days</span></li>
+          <li className="ahead__stop"><span className="hand-caveat text-hand">and after</span><span className="eyebrow mt-1">still becoming</span></li>
         </ol>
         <div className="panel mx-auto max-w-xl">
-          <h2 id="sign-in-title" className="text-title font-extrabold">
+          <h2 id="sign-in-title" className="text-title">
             {joining ? "Sign in to join your partner" : "Start your path"}
           </h2>
           <p className="mt-2 text-ink-muted">We’ll email you a 6-digit code. No password needed.</p>
