@@ -1,0 +1,209 @@
+/*
+  Our Path landing: five acts on one paper world.
+  Every act reads --p (0..1) from use-scroll-acts. Without motion, each act is
+  a single static composition with --p fixed at its most telling frame.
+*/
+.landing { position: relative; overflow-x: clip; }
+
+/* ---------- the trail ---------- */
+.landing-trail {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  --trail-p: 1;
+}
+.landing-trail__dash {
+  fill: none; stroke: var(--trail); stroke-width: 12px; stroke-linecap: round;
+  stroke-dasharray: 20 26; vector-effect: non-scaling-stroke;
+}
+.landing-trail__mask {
+  fill: none; stroke: #fff; stroke-width: 40px; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--trail-p));
+}
+
+/* ---------- acts and stages ---------- */
+.act { position: relative; z-index: 1; --p: 0; }
+.stage {
+  position: relative;
+  min-height: max(100svh, 640px);
+  overflow: hidden;
+}
+.stage > * { position: absolute; }
+
+/* derived timelines, all from --p */
+.act--two    { --his: clamp(0, calc((var(--p) - 0.12) / 0.3), 1); --hers: clamp(0, calc((var(--p) - 0.45) / 0.3), 1); --title: clamp(0, calc(var(--p) / 0.12), 1); }
+.act--sealed { --wipe: clamp(0, calc((var(--p) - 0.08) / 0.55), 1); }
+.act--peak   { --flap: clamp(0, calc(var(--p) / 0.32), 1); --rise: clamp(0, calc((var(--p) - 0.32) / 0.36), 1); --words: clamp(0, calc((var(--p) - 0.7) / 0.2), 1); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .act--hero   { height: 170svh; }
+  .act--two    { height: 240svh; }
+  .act--sealed { height: 170svh; }
+  .act--peak   { height: 300svh; }   /* the peak gets the longest span */
+  .stage { position: sticky; top: 0; height: 100svh; min-height: 560px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-trail { --trail-p: 1; }
+  .act--hero { --p: 0; }
+  .act--two, .act--sealed, .act--peak { --p: 1; }
+  .scroll-hint, .peak-kicker { display: none; }
+}
+
+/* ---------- 1 · hero: three planes ---------- */
+.hero-caption { padding: 0.5rem 0.25rem 0.7rem; text-align: center; font-size: var(--text-hand); line-height: 1.15; }
+.hero-rear {
+  width: min(560px, 46vw);
+  inset-inline-end: 7vw; top: 12svh;
+  rotate: -3deg;
+  z-index: 1;
+  transform: translateY(calc(var(--p) * -9svh)) scale(calc(1 + var(--p) * 0.06));
+}
+.hero-copy {
+  inset-inline-start: max(1.25rem, 7vw); top: 24svh;
+  max-width: 34rem; z-index: 2;
+  transform: translateY(calc(var(--p) * -24svh));
+  opacity: calc(1 - clamp(0, calc((var(--p) - 0.55) / 0.35), 1));
+}
+.hero-front {
+  width: min(230px, 20vw);
+  inset-inline-end: 40vw; bottom: 6svh;
+  rotate: 7deg; z-index: 3;
+  transform: translateY(calc(var(--p) * -52svh)) rotate(calc(var(--p) * -9deg));
+}
+.tape {
+  position: absolute; top: -10px; left: 50%; width: 76px; height: 22px; translate: -50% 0; rotate: -4deg;
+  background: color-mix(in srgb, var(--trail) 70%, white); opacity: 0.85;
+}
+.scroll-hint {
+  inset-inline: 0; bottom: 1.25rem; text-align: center; z-index: 2;
+  opacity: calc(1 - clamp(0, calc(var(--p) / 0.15), 1));
+}
+
+/* ---------- 2 · one day, two captions ---------- */
+.two-title {
+  inset-inline: 0; top: 9svh; text-align: center; padding-inline: 1.25rem; z-index: 2;
+  opacity: var(--title); transform: translateY(calc((1 - var(--title)) * 12px));
+}
+.two-photo {
+  width: min(460px, 40vw); left: 50%; top: 22svh; z-index: 1;
+  translate: -50% 0; rotate: 1.5deg;
+}
+.caption-card {
+  display: flex; flex-direction: column; gap: 0.15rem;
+  max-width: 17rem; padding: 0.9rem 1.1rem 1rem;
+  background: var(--surface); border-radius: 18px; z-index: 2;
+  box-shadow: 0 0 0 1px rgb(59 42 31 / 0.06), 0 14px 30px -18px rgb(59 42 31 / 0.5);
+}
+.caption-card--his {
+  inset-inline-start: 7vw; top: 34svh; rotate: -3deg;
+  opacity: var(--his); transform: translateX(calc((1 - var(--his)) * -40vw));
+}
+.caption-card--hers {
+  inset-inline-end: 7vw; top: 52svh; rotate: 2.5deg;
+  opacity: var(--hers); transform: translateX(calc((1 - var(--hers)) * 40vw));
+}
+
+/* ---------- 3 · sealed sides (a wipe) ---------- */
+.sealed-copy { inset-inline-start: max(1.25rem, 7vw); top: 18svh; max-width: 30rem; z-index: 2; }
+.envelopes {
+  inset-inline-end: 7vw; top: 22svh; display: flex; gap: 1.5rem; z-index: 1;
+  clip-path: inset(-3rem calc((1 - var(--wipe)) * 100%) -5rem -3rem);
+  padding: 0.5rem;
+}
+.envelope {
+  position: relative; width: min(230px, 20vw); aspect-ratio: 1.45;
+  display: grid; place-items: end center; padding-bottom: 1rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sunken) 80%, white), var(--sunken));
+  box-shadow: 0 1px 1px rgb(59 42 31 / 0.08), 0 14px 26px -14px rgb(59 42 31 / 0.45);
+}
+.envelope::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 58%;
+  background: color-mix(in srgb, var(--sunken) 70%, var(--edge));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.envelope--his { rotate: -4deg; }
+.envelope--hers { rotate: 3deg; translate: 0 2.5rem; }
+.seal {
+  position: absolute; top: 46%; left: 50%; translate: -50% -50%;
+  width: 26px; height: 26px; border-radius: 50%;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.18);
+}
+
+/* ---------- 4 · the peak: the reader's scroll opens the letter ---------- */
+.peak-kicker {
+  inset-inline: 0; top: 8svh; text-align: center; z-index: 5;
+  opacity: calc(1 - var(--flap));
+}
+.letter {
+  left: 50%; top: 46svh; translate: -50% 0;
+  width: min(440px, 80vw); aspect-ratio: 1.55;
+  perspective: 900px; z-index: 2;
+  --spread: 48%;
+}
+.letter > * { position: absolute; }
+.letter__back { inset: 0; background: color-mix(in srgb, var(--sunken) 75%, var(--edge)); border-radius: 4px; }
+.letter__front {
+  inset: 0; z-index: 4; border-radius: 4px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sunken) 85%, white), var(--sunken));
+  clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+  box-shadow: 0 18px 34px -20px rgb(59 42 31 / 0.55);
+}
+.letter__flap {
+  inset: 0 0 auto 0; height: 58%;
+  transform-origin: 50% 0;
+  background: color-mix(in srgb, var(--sunken) 60%, var(--edge));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  backface-visibility: hidden;
+}
+/* Two faces of one flap: the closed face sits over the photos, the open face behind them */
+.letter__flap--closed { z-index: 5; transform: rotateX(calc(var(--flap) * 178deg)); }
+.letter__flap--open { z-index: 2; transform: rotateX(calc(var(--flap) * 178deg - 180deg)); background: color-mix(in srgb, var(--sunken) 80%, var(--edge)); }
+.seal--flap { top: 82%; background: #D32F2F; }
+.letter__photos { inset: 0; z-index: 3; }
+.letter__photo { position: absolute; width: 46%; bottom: 6%; }
+.letter__photo .hero-caption { font-size: 1.05rem; line-height: 1.2; }
+.letter__photo--a {
+  inset-inline-start: 4%;
+  transform: translate(calc(var(--rise) * var(--spread) * -1), calc(var(--rise) * -128%)) rotate(calc(var(--rise) * -6deg));
+}
+.letter__photo--b {
+  inset-inline-end: 4%;
+  transform: translate(calc(var(--rise) * var(--spread)), calc(var(--rise) * -120%)) rotate(calc(var(--rise) * 5deg));
+}
+.peak-copy {
+  inset-inline: 0; bottom: 5svh; text-align: center; padding-inline: 1.25rem; z-index: 5;
+  opacity: var(--words); transform: translateY(calc((1 - var(--words)) * 14px));
+}
+
+/* ---------- 5 · the path ahead, then sign in ---------- */
+.act--close { padding: 4rem 1.25rem 6rem; }
+.ahead {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 1.25rem; margin-bottom: 3rem;
+}
+.ahead__stop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 9.5rem; aspect-ratio: 0.86; padding: 0.75rem;
+  border: 2px dashed var(--edge); border-radius: 6px; background: color-mix(in srgb, var(--page) 70%, white);
+  text-align: center;
+}
+.ahead__stop:nth-child(1) { rotate: -3deg; }
+.ahead__stop:nth-child(2) { rotate: 2deg; translate: 0 0.75rem; }
+.ahead__stop:nth-child(3) { rotate: -1.5deg; }
+
+/* ---------- mobile: its own composition, not a shrunk desktop ---------- */
+@media (max-width: 700px) {
+  .hero-copy { top: 7svh; inset-inline: 1.25rem; }
+  .hero-rear { width: 80vw; inset-inline-end: auto; left: 10vw; top: 42svh; }
+  .hero-front { width: 38vw; inset-inline-end: 9vw; bottom: 4svh; transform: translateY(calc(var(--p) * -40svh)) rotate(calc(var(--p) * -9deg)); }
+  .two-title { top: 6svh; }
+  .two-photo { width: 78vw; top: 17svh; }
+  .caption-card { max-width: 72vw; }
+  .caption-card--his { inset-inline-start: 4vw; top: auto; bottom: 22svh; }
+  .caption-card--hers { inset-inline-end: 4vw; top: auto; bottom: 7svh; }
+  .sealed-copy { top: 8svh; inset-inline: 1.25rem; }
+  .envelopes { inset-inline: 0; top: auto; bottom: 14svh; justify-content: center; gap: 0.75rem; }
+  .envelope { width: 40vw; }
+  .letter { top: 50svh; width: 72vw; --spread: 22%; }
+  .letter__photo .hero-caption { font-size: 0.9rem; }
+  .peak-copy { bottom: 3svh; }
+  .ahead__stop { width: 7.5rem; }
+}

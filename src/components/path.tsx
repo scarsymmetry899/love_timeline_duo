@@ -1,12 +1,20 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import RevealButton from "./reveal-button";
 import PathPolaroid from "./path-polaroid";
 import type { Member, PathMarker } from "@/lib/journey";
-import { formatDay, penClass, pinDisplay } from "@/lib/pins";
+import { dayNumber, formatDay, penClass, pinDisplay, upcomingMilestones } from "@/lib/pins";
 
 const fmt = formatDay;
+
+// "Today" in the reader's own time zone, read only in the browser so the
+// server render never disagrees with it.
+const noop = () => () => {};
+function localToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 /**
  * The path is an ordered list in normal flow, so reading order matches the
@@ -18,6 +26,8 @@ export default function Path({
   markers, me, partner, since,
 }: { markers: PathMarker[]; me: Member; partner: Member | null; since: string | null }) {
   const listRef = useRef<HTMLOListElement>(null);
+  const today = useSyncExternalStore(noop, localToday, () => null);
+  const ahead = since && today ? upcomingMilestones(since, today) : [];
   const [trail, setTrail] = useState<{ d: string; w: number; h: number; fadeFrom: number } | null>(null);
 
   useLayoutEffect(() => {
@@ -47,7 +57,7 @@ export default function Path({
     const ro = new ResizeObserver(draw);
     ro.observe(list);
     return () => ro.disconnect();
-  }, [markers.length]);
+  }, [markers.length, ahead.length]);
 
   return (
     <section aria-labelledby="path-title">
@@ -94,6 +104,7 @@ export default function Path({
                       pin={owner?.pin_color}
                       date={m.moment_date}
                       dateLabel={fmt(m.moment_date)}
+                      day={since ? dayNumber(since, m.moment_date) : null}
                     />
                   ) : (
                     <article className="panel text-center" aria-label={`Sealed memory from ${who}, ${fmt(m.moment_date)}`}>
@@ -102,7 +113,10 @@ export default function Path({
                         <span className={`${penClass(owner?.pen_style)} text-hand`}>{who}</span>
                         <br />added a memory here
                       </p>
-                      <p className="mt-1 text-caption text-ink-muted"><time dateTime={m.moment_date}>{fmt(m.moment_date)}</time></p>
+                      <p className="mt-1 text-caption text-ink-muted">
+                        {since && <>Day {dayNumber(since, m.moment_date).toLocaleString("en-IN")} · </>}
+                        <time dateTime={m.moment_date}>{fmt(m.moment_date)}</time>
+                      </p>
                       <p className="mt-1 text-caption font-semibold">Sealed</p>
                       <div className="mt-2"><RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} /></div>
                     </article>
@@ -111,6 +125,19 @@ export default function Path({
               </li>
             );
           })}
+
+          {ahead.map((a, i) => (
+            <li key={a.date} className={`flex ${(markers.length + i) % 2 ? "justify-end" : "justify-start"}`}>
+              <div data-stop className="w-[min(12rem,58%)] rounded-md border-2 border-dashed border-edge bg-page/80 p-4 text-center">
+                <p className="text-caption font-semibold text-ink-muted">Coming up</p>
+                <p className={`${penClass(me.pen_style)} text-hand`}>{a.label}</p>
+                <p className="text-caption text-ink-muted">
+                  <time dateTime={a.date}>{fmt(a.date)}</time>
+                  <br />{a.inDays === 0 ? "today" : a.inDays === 1 ? "tomorrow" : `in ${a.inDays} days`}
+                </p>
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
 

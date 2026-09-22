@@ -25,3 +25,41 @@ export function formatDay(iso: string) {
   const weekday = DAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
   return `${weekday}, ${d} ${MONTHS[m - 1]} ${y}`;
 }
+
+const DAY_MS = 86_400_000;
+const toUTC = (iso: string) => {
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  return Date.UTC(y, m - 1, d);
+};
+const toISO = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+/** Day number of `iso` on a path that started on `since` (day one = 1). */
+export function dayNumber(since: string, iso: string) {
+  return Math.floor((toUTC(iso) - toUTC(since)) / DAY_MS) + 1;
+}
+
+export type Milestone = { date: string; label: string; inDays: number };
+
+/** The next two milestones after `today`: yearly anniversaries and round day counts. */
+export function upcomingMilestones(since: string, today: string, count = 2): Milestone[] {
+  const start = toUTC(since);
+  const now = toUTC(today);
+  const out: Milestone[] = [];
+  const [sy, sm, sd] = since.split("-").map(Number);
+  for (let years = 1; years < 80; years++) {
+    const t = Date.UTC(sy + years, sm - 1, sd);
+    if (t > now) {
+      out.push({ date: toISO(t), label: years === 1 ? "1 year together" : `${years} years together`, inDays: Math.round((t - now) / DAY_MS) });
+      break;
+    }
+  }
+  const dayToday = Math.floor((now - start) / DAY_MS) + 1;
+  for (const step of [1000, 100]) {
+    const nextDay = (Math.floor(dayToday / step) + 1) * step;
+    const t = start + (nextDay - 1) * DAY_MS;
+    if (!out.some((m) => m.date === toISO(t))) {
+      out.push({ date: toISO(t), label: `Day ${nextDay.toLocaleString("en-IN")}`, inDays: Math.round((t - now) / DAY_MS) });
+    }
+  }
+  return out.sort((a, b) => a.inDays - b.inDays).slice(0, count);
+}
