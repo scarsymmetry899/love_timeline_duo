@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getJourney, daysTogether, type PathMarker } from "@/lib/journey";
+import Link from "next/link";
+import { getJourney, getVisibleMoments, daysTogether, type PathMarker } from "@/lib/journey";
 import { signOut } from "@/app/actions";
 import Path from "@/components/path";
 import InvitePartner from "@/components/invite-partner";
@@ -14,12 +15,13 @@ export default async function Home() {
   if (!j.couple) redirect("/start");
 
   const supabase = await createClient();
-  const { data } = await supabase.rpc("get_path");
+  const [{ data }, visible] = await Promise.all([supabase.rpc("get_path"), getVisibleMoments()]);
   const markers = (data ?? []) as PathMarker[];
+  const moments = new Map(visible.map((m) => [m.id, m]));
   const days = daysTogether(j.couple.together_since);
 
   return (
-    <main className="mx-auto max-w-5xl px-5 pb-16 pt-[max(2rem,env(safe-area-inset-top))] lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-14">
+    <main className="mx-auto max-w-5xl px-5 pb-32 lg:pb-16 pt-[max(2rem,env(safe-area-inset-top))] lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-14">
       <div className="lg:sticky lg:top-8 lg:self-start">
       <header>
         <p className="eyebrow">Our path</p>
@@ -52,14 +54,18 @@ export default async function Home() {
       </div>
 
       <div className="lg:min-w-0">
+      <div className="mt-8 hidden lg:mt-0 lg:block">
+        <Link href="/moment/new" className="btn w-full">Add a memory</Link>
+      </div>
+
       {!j.partner && (
-        <div className="mt-8 lg:mt-0">
+        <div className="mt-8 lg:mt-6">
           <InvitePartner />
         </div>
       )}
 
       <div className="mt-12 lg:mt-10">
-        <Path markers={markers} me={j.me} partner={j.partner} since={j.couple.together_since} />
+        <Path markers={markers} me={j.me} partner={j.partner} since={j.couple.together_since} moments={moments} />
       </div>
 
       <hr className="torn mt-14 lg:hidden" />
@@ -71,6 +77,10 @@ export default async function Home() {
           <button className="btn-quiet text-caption">Sign out</button>
         </form>
       </div>
+      </div>
+
+      <div className="add-bar lg:hidden">
+        <Link href="/moment/new" className="btn add-bar__btn">Add a memory</Link>
       </div>
     </main>
   );

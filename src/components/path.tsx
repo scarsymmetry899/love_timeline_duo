@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import RevealButton from "./reveal-button";
 import PathPolaroid from "./path-polaroid";
-import type { Member, PathMarker } from "@/lib/journey";
+import type { Member, Moment, PathMarker } from "@/lib/journey";
 import { dayNumber, formatDay, penClass, pinDisplay, shortDay, upcomingMilestones } from "@/lib/pins";
 
 const fmt = formatDay;
@@ -23,8 +23,15 @@ function localToday() {
  * through the measured centre of each stop.
  */
 export default function Path({
-  markers, me, partner, since,
-}: { markers: PathMarker[]; me: Member; partner: Member | null; since: string | null }) {
+  markers, me, partner, since, moments,
+}: {
+  markers: PathMarker[];
+  me: Member;
+  partner: Member | null;
+  since: string | null;
+  /** Content for the memories this person may read. Absent on the marketing preview. */
+  moments?: Map<string, Moment>;
+}) {
   const listRef = useRef<HTMLOListElement>(null);
   const today = useSyncExternalStore(noop, localToday, () => null);
   const ahead = since && today ? upcomingMilestones(since, today) : [];
@@ -105,6 +112,7 @@ export default function Path({
                       date={m.moment_date}
                       dateLabel={shortDay(m.moment_date)}
                       day={since ? dayNumber(since, m.moment_date) : null}
+                      moment={moments?.get(m.id)}
                     />
                   ) : (
                     <article
@@ -119,7 +127,9 @@ export default function Path({
                         {since && <>Day {dayNumber(since, m.moment_date).toLocaleString("en-IN")} · </>}
                         <time dateTime={m.moment_date}>{shortDay(m.moment_date)}</time>
                       </p>
-                      <div className="mt-3"><RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} /></div>
+                      <div className="mt-3">
+                        <RevealButton id={m.id} iVoted={m.i_voted} partnerVoted={m.partner_voted} otherName={owner?.display_name} />
+                      </div>
                     </article>
                   )}
                 </div>

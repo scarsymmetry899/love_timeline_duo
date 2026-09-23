@@ -3,15 +3,37 @@
 import { useState, useTransition } from "react";
 import { voteReveal } from "@/app/actions";
 
-export default function RevealButton({ id, iVoted, partnerVoted }: { id: string; iVoted: boolean; partnerVoted: boolean }) {
+type Props = {
+  id: string;
+  iVoted: boolean;
+  partnerVoted: boolean;
+  /** True when the signed-in person wrote this memory. */
+  mine?: boolean;
+  otherName?: string | null;
+  quiet?: boolean;
+};
+
+// A memory opens once both people have voted. Either of you can go first.
+export default function RevealButton({ id, iVoted, partnerVoted, mine = false, otherName, quiet = true }: Props) {
   const [error, setError] = useState("");
   const [pending, start] = useTransition();
-  if (iVoted) return <p className="text-caption text-ink-muted">You’re ready. Waiting for them to open it too.</p>;
+  const them = otherName || "them";
+
+  if (iVoted) {
+    return <p className="text-caption text-ink-muted">You’re ready. Waiting for {them} to open it too.</p>;
+  }
+
+  const label = pending
+    ? "Opening…"
+    : partnerVoted
+      ? mine ? `${them} wants to see this. Open it together` : `${them} is ready. Open it now`
+      : mine ? `I’m ready to share this with ${them}` : "I’m ready to open this";
+
   return (
     <div>
       <button
         type="button"
-        className="btn-quiet text-caption"
+        className={quiet ? "btn-quiet text-caption" : "btn"}
         disabled={pending}
         onClick={() => start(async () => {
           setError("");
@@ -25,9 +47,9 @@ export default function RevealButton({ id, iVoted, partnerVoted }: { id: string;
           }
         })}
       >
-        {pending ? "Opening…" : partnerVoted ? "Open it now" : "I’m ready to open this"}
+        {label}
       </button>
-      {partnerVoted && !pending && <p className="text-caption text-ink-muted">They’re ready too.</p>}
+      {partnerVoted && !pending && !mine && <p className="text-caption text-ink-muted">They’re ready too.</p>}
       {error && <p role="alert" className="error mt-1">{error}</p>}
     </div>
   );

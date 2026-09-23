@@ -316,3 +316,159 @@ body { -webkit-tap-highlight-color: transparent; }
 button, a, summary { -webkit-touch-callout: none; }
 button, summary { user-select: none; }
 img { max-width: 100%; }
+
+/* ---------- memory pages: the objects a memory is made of ---------- */
+.type { font-family: var(--font-ui); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.tape-rose { background-color: color-mix(in srgb, #f6a5b9 70%, white); }
+.tape-mint { background-color: color-mix(in srgb, #a9dcc3 70%, white); }
+.tape-sky { background-color: color-mix(in srgb, #a7cbee 70%, white); }
+.tape-butter { background-color: color-mix(in srgb, #f2cf6b 70%, white); }
+.tape-top { top: -0.75rem; left: 50%; translate: -50% 0; rotate: -4deg; }
+.tape-corner-l { top: -0.5rem; left: -1.3rem; rotate: -38deg; }
+.tape-corner-r { top: -0.5rem; right: -1.3rem; rotate: 38deg; }
+
+/* more than one photo: a second print peeking out behind */
+.stacked::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--surface); rotate: 6deg; translate: 8px 2px;
+  box-shadow: 0 6px 14px -8px rgb(46 35 28 / 0.4);
+}
+
+.wax-seal {
+  position: absolute; top: 3.1rem; left: 50%; z-index: 1;
+  display: grid; place-items: center;
+  width: 2.8rem; height: 2.8rem; translate: -50% 0;
+  border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
+  color: rgb(255 255 255 / 0.92);
+  box-shadow: inset 0 -4px 0 rgb(0 0 0 / 0.2), inset 0 3px 3px rgb(255 255 255 / 0.3), 0 3px 6px rgb(46 35 28 / 0.35);
+}
+.wax-seal-static { position: relative; top: auto; left: auto; translate: none; }
+.wax-seal-sm { width: 2.2rem; height: 2.2rem; flex: none; }
+
+.add-tile {
+  border: 2.5px dashed color-mix(in srgb, var(--edge) 70%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 65%, transparent);
+  transition: translate 150ms ease, background 150ms ease;
+}
+@media (hover: hover) { .add-tile:hover { background: var(--surface); translate: 0 -2px; } }
+
+.empty-photo {
+  background: repeating-linear-gradient(135deg, var(--page) 0 10px, color-mix(in srgb, var(--sunken) 55%, var(--page)) 10px 20px);
+  outline: 2.5px dashed color-mix(in srgb, var(--edge) 60%, transparent);
+  outline-offset: -10px;
+}
+
+.toast {
+  position: relative; border-radius: 6px; background: var(--surface);
+  padding: 1rem 1rem 0.8rem; text-align: center; font-weight: 600;
+  box-shadow: 0 10px 24px -16px rgb(46 35 28 / 0.6);
+}
+
+.postmark {
+  position: absolute; top: -0.5rem; right: 0;
+  display: flex; width: 5.4rem; height: 5.4rem;
+  flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
+  border-radius: 50%;
+  border: 3px double color-mix(in srgb, var(--accent) 70%, transparent);
+  color: color-mix(in srgb, var(--accent) 85%, transparent);
+  rotate: 12deg; mix-blend-mode: multiply;
+}
+.postmark::after {
+  content: ""; position: absolute; right: 88%; top: 30%; width: 3.5rem; height: 40%;
+  background: repeating-linear-gradient(to bottom, currentColor 0 2px, transparent 2px 7px);
+  opacity: 0.6;
+}
+
+.luggage-tag {
+  display: inline-flex; flex-direction: column; gap: 0.15rem; position: relative;
+  background: color-mix(in srgb, var(--trail) 70%, var(--sunken));
+  color: var(--ink);
+  padding: 0.5rem 1rem 0.55rem 1.9rem;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+  rotate: -2deg;
+}
+.luggage-tag::before {
+  content: ""; position: absolute; left: 11px; top: 50%; width: 9px; height: 9px;
+  translate: 0 -50%; border-radius: 50%; background: var(--page);
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.25);
+}
+
+.notebook {
+  position: relative; border-radius: 6px;
+  background-color: #fffdf6;
+  background-image:
+    linear-gradient(90deg, transparent 2.6rem, color-mix(in srgb, var(--accent) 35%, white) 2.6rem, color-mix(in srgb, var(--accent) 35%, white) calc(2.6rem + 2px), transparent calc(2.6rem + 2px)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(2rem - 1px), #d8e6f2 calc(2rem - 1px) 2rem);
+  background-attachment: local;
+  padding: 0.35rem 1.1rem 1rem 3.4rem;
+  font-size: 1.08rem; line-height: 2rem;
+  box-shadow: 0 1px 2px rgb(46 35 28 / 0.08), 0 16px 30px -22px rgb(46 35 28 / 0.5);
+}
+.notebook::before {
+  content: ""; position: absolute; left: 0.9rem; top: 1rem; bottom: 1rem; width: 0.7rem;
+  background: radial-gradient(circle, var(--page) 0.3rem, transparent calc(0.3rem + 1px)) 0 0 / 0.7rem 4rem repeat-y;
+}
+.notebook-field { border: 2px solid transparent; color: var(--ink); background: transparent; }
+.notebook-field:focus-visible { border-color: var(--ink-muted); outline: none; }
+
+.cassette {
+  position: relative; display: block; border-radius: 14px;
+  background: var(--ink); padding: 0.7rem 0.7rem 1.1rem; color: var(--ink);
+  box-shadow: 0 16px 28px -18px rgb(46 35 28 / 0.8);
+  transition: rotate 200ms ease; rotate: -1deg;
+}
+@media (hover: hover) { .cassette:hover { rotate: 0deg; } }
+.cassette-label {
+  display: block; border-radius: 6px;
+  background: linear-gradient(#fffaf0 62%, #f0a7ba 62% 72%, #f2cf6b 72% 82%, #fffaf0 82%);
+  padding: 0.45rem 0.8rem 2.6rem;
+}
+.cassette-window {
+  position: absolute; left: 50%; bottom: 1.35rem; display: flex;
+  width: 58%; height: 1.9rem; translate: -50% 0;
+  align-items: center; justify-content: space-between;
+  border-radius: 999px; background: var(--ink); padding: 0 0.5rem;
+}
+.reel {
+  width: 1.3rem; height: 1.3rem; border-radius: 50%;
+  background: repeating-conic-gradient(#fffaf0 0 20deg, #2e231c 20deg 60deg);
+  border: 3px solid #fffaf0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reel { animation: spin 3s linear infinite; animation-play-state: paused; }
+  .cassette:hover .reel { animation-play-state: running; }
+}
+@keyframes spin { to { rotate: 360deg; } }
+
+.opened-stamp {
+  display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+  border: 3px solid var(--accent); border-radius: 12px; color: var(--accent);
+  padding: 0.8rem 1rem; rotate: -3deg; mix-blend-mode: multiply;
+}
+
+.seal-panel {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  border-radius: 14px; background: color-mix(in srgb, var(--surface) 92%, var(--sunken));
+  padding: 1.5rem 1.25rem 1.4rem; text-align: center;
+  box-shadow: 0 16px 30px -22px rgb(46 35 28 / 0.6);
+}
+.seal-panel .wax-seal { margin-bottom: 0.75rem; }
+.seal-note {
+  display: flex; align-items: center; gap: 0.9rem; border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--sunken)); padding: 0.9rem 1rem;
+}
+
+@media (prefers-reduced-motion: no-preference) { .fade-up { animation: fade-up 0.55s var(--ease-out) both; } }
+@keyframes fade-up { from { opacity: 0; translate: 0 12px; } }
+
+/* the one thing you do often: add a memory */
+.add-bar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 30;
+  display: flex; justify-content: center;
+  padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--page) 85%, transparent) 35%, var(--page) 75%);
+  pointer-events: none;
+}
+.add-bar__btn { pointer-events: auto; width: min(100%, 26rem); box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 18px 30px -16px rgb(46 35 28 / 0.95); }
