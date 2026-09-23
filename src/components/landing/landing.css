@@ -27,9 +27,9 @@
 .act--peak   { --draw: clamp(0, calc(var(--p) / 0.3), 1); --flap: clamp(0, calc(var(--p) / 0.32), 1); --rise: clamp(0, calc((var(--p) - 0.32) / 0.36), 1); --words: clamp(0, calc((var(--p) - 0.7) / 0.2), 1); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .act--hero   { height: 170svh; }
-  .act--two    { height: 230svh; }
-  .act--sealed { height: 170svh; }
+  .act--hero   { height: 150svh; }
+  .act--two    { height: 200svh; }
+  .act--sealed { height: 150svh; }
   .act--peak   { height: 290svh; }   /* the peak gets the longest span */
   .stage { position: sticky; top: 0; height: 100svh; min-height: 34rem; }
 }
@@ -236,3 +236,81 @@
   border-radius: 1.5rem;
 }
 .ahead__stop .hand-caveat { font-size: clamp(1.2rem, 3.6vw, 1.6rem); line-height: 1.1; white-space: nowrap; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: max(0.6rem, env(safe-area-inset-top)) clamp(1rem, 5vw, 3rem) 0.6rem;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.topbar__mark { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
+.topbar__cta { min-height: 2.6rem; padding-block: 0.45rem; font-size: 0.95rem; }
+
+/* ---------- plain bands between the scroll acts ---------- */
+.band { padding: clamp(4rem, 9vw, 7.5rem) clamp(1.25rem, 6vw, 5rem); scroll-margin-top: 5.5rem; }
+.band--sunken { background: color-mix(in srgb, var(--sunken) 55%, var(--page)); }
+.band__inner { max-width: 68rem; margin-inline: auto; }
+.band__inner--narrow { max-width: 44rem; }
+
+.steps { display: grid; gap: 1.25rem; grid-template-columns: 1fr; counter-reset: step; }
+.step { position: relative; padding-top: 2.6rem; }
+.step__n {
+  position: absolute; top: 1.15rem; inset-inline-start: 1.15rem;
+  display: grid; place-items: center;
+  width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--ink); color: var(--cream-50);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+}
+.step h3 { margin-top: 0.6rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.chip {
+  padding: 0.45rem 0.9rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--edge) 55%, transparent);
+  font-size: var(--text-caption); color: var(--ink-muted);
+}
+
+.preview__frame {
+  max-width: 30rem; margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 2rem) 0;
+  background: var(--page);
+  border-radius: 28px;
+  box-shadow: 0 0 0 1px rgb(46 35 28 / 0.08), 0 30px 60px -40px rgb(46 35 28 / 0.8);
+  overflow: hidden;
+  max-height: min(34rem, 78svh);
+  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+}
+.preview { text-align: center; }
+
+.facts { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+
+.faq { padding: 1.1rem 1.25rem; }
+.faq__q {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  cursor: pointer; list-style: none; font-weight: 600; min-height: 2.75rem;
+}
+.faq__q::-webkit-details-marker { display: none; }
+.faq__chev { width: 1rem; height: 1rem; flex: none; transition: rotate 200ms var(--ease-out); }
+.faq[open] .faq__chev { rotate: 180deg; }
+
+.footer {
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 6vw, 5rem) calc(clamp(3rem, 7vw, 5rem) + env(safe-area-inset-bottom));
+  text-align: center;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+@media (min-width: 52rem) {
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* the scroll acts keep their text readable at every scroll position */
+.act--two    { --his: clamp(0.25, calc((var(--p) - 0.12) / 0.3), 1); --hers: clamp(0.25, calc((var(--p) - 0.45) / 0.3), 1); --title: clamp(0.35, calc(var(--p) / 0.15), 1); }
+.act--peak   { --words: clamp(0.35, calc((var(--p) - 0.55) / 0.2), 1); }
+@media (prefers-reduced-motion: no-preference) {
+  .act--peak { height: 240svh; }   /* was 290svh: the peak was slow to get through */
+}

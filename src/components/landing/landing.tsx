@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import EmailCodeSignIn from "@/components/email-code-sign-in";
+import Path from "@/components/path";
+import type { Member, PathMarker } from "@/lib/journey";
 import { useScrollActs } from "./use-scroll-acts";
 import "./landing.css";
 
@@ -11,6 +13,23 @@ const PHOTO = {
   seaWalk: "https://images.unsplash.com/photo-1518925591184-152905776d4f?auto=format&fit=crop&w=1100&q=80",
   hands: "https://images.unsplash.com/photo-1588632258523-26242d0a8c2c?auto=format&fit=crop&w=900&q=80",
 };
+
+const SAMPLE_ME: Member = { user_id: "a", role: "owner", pen_style: "caveat", pin_color: "#F44336", display_name: "Tj" };
+const SAMPLE_PARTNER: Member = { user_id: "b", role: "partner", pen_style: "dancing", pin_color: "#1E88E5", display_name: "Mira" };
+const SAMPLE_MARKERS: PathMarker[] = [
+  { id: "sample-1", author_id: "a", moment_date: "2024-01-02", is_mine: true, revealed: true, i_voted: true, partner_voted: true },
+  { id: "sample-2", author_id: "b", moment_date: "2024-03-14", is_mine: false, revealed: false, i_voted: false, partner_voted: true },
+  { id: "sample-3", author_id: "b", moment_date: "2024-06-20", is_mine: false, revealed: true, i_voted: true, partner_voted: true },
+];
+
+const FAQ = [
+  { q: "Is it free?", a: "Yes. It’s free for the two of you while we’re building it, and there are no ads." },
+  { q: "Who can see what I write?", a: "Only your partner, and only once you both agree to open a memory. There are no public pages and nothing is shared anywhere else." },
+  { q: "What if my partner doesn’t join yet?", a: "You can start on your own and invite them whenever you like. Your memories wait for them." },
+  { q: "Do I need to install anything?", a: "No. It runs in your phone’s browser, and you can add it to your home screen if you want it to feel like an app." },
+  { q: "How do I sign in?", a: "Enter your email and we send you a 6-digit code. No passwords to remember or lose." },
+  { q: "Can I change my mind about a memory?", a: "Yes. Anything you added, you can edit or delete at any time." },
+];
 
 function Photo({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
   return (
@@ -33,18 +52,28 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
   useScrollActs();
 
   return (
+    <>
+      <header className="topbar">
+        <a href="#sign-in" className="sr-only focus:not-sr-only">Skip to sign in</a>
+        <p className="topbar__mark font-display">Our Path</p>
+        <a href="#sign-in" className="btn-ghost topbar__cta">Sign in</a>
+      </header>
     <main className="landing">
       {/* 1 · Recognition: a layered hero, three planes on paper */}
       <section data-act className="act act--hero" aria-labelledby="hero-title">
         <div className="stage hero-grid">
           <Trail d="M8 100 C 30 70, 20 40, 55 35 S 90 10, 96 -5" />
           <div className="hero-copy">
-            <p className="eyebrow">A private path for two</p>
+            <p className="eyebrow">A private scrapbook for two</p>
             <h1 id="hero-title" className="mt-2 text-display">Our&nbsp;Path</h1>
             <p className="measure mt-4 text-lead text-ink-muted">
-              A trail of your relationship, written from both sides. Add the moments you want to keep; theirs stay sealed until you open them together.
+              Keep the moments you don’t want to forget: photos, a few lines in your own words, a voice note. Everything you add stays sealed on your side until you both choose to open it together.
             </p>
-            <a href="#sign-in" className="btn mt-6">Get started</a>
+            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <a href="#sign-in" className="btn">Start your path</a>
+              <a href="#how" className="btn-quiet">See how it works</a>
+            </div>
+            <p className="mt-4 text-caption text-ink-muted">Free for the two of you · No app to install · Sign in with an emailed code</p>
           </div>
           <div className="hero-stack">
             <div className="hero-rear polaroid">
@@ -58,6 +87,46 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
             </div>
           </div>
           <p className="scroll-hint text-caption text-ink-muted" aria-hidden="true">Scroll to walk the path</p>
+        </div>
+      </section>
+
+
+      {/* How it works — the plain explanation, right after the hero */}
+      <section id="how" className="band" aria-labelledby="how-title">
+        <div className="band__inner">
+          <p className="eyebrow">How it works</p>
+          <h2 id="how-title" className="mt-2 text-title">Three steps, and the rest is yours</h2>
+          <ol className="steps mt-10">
+            <li className="step panel">
+              <span className="step__n" aria-hidden="true">1</span>
+              <h3 className="text-heading">Add a memory</h3>
+              <p className="mt-2 text-ink-muted">
+                A photo, a few lines in your own words, a voice note, the song that was playing, where you were. Anything worth keeping.
+              </p>
+            </li>
+            <li className="step panel">
+              <span className="step__n" aria-hidden="true">2</span>
+              <h3 className="text-heading">It stays sealed</h3>
+              <p className="mt-2 text-ink-muted">
+                Your partner sees that you saved something that day, and the date. Not a word of what you wrote, until you’re both ready.
+              </p>
+            </li>
+            <li className="step panel">
+              <span className="step__n" aria-hidden="true">3</span>
+              <h3 className="text-heading">Open it together</h3>
+              <p className="mt-2 text-ink-muted">
+                When you both tap reveal, the memory opens on the path and you see how they remembered the very same day.
+              </p>
+            </li>
+          </ol>
+          <ul className="chips mt-10" aria-label="What a memory can hold">
+            <li className="chip">Photos</li>
+            <li className="chip">Notes in your words</li>
+            <li className="chip">Voice notes</li>
+            <li className="chip">A song link</li>
+            <li className="chip">The place</li>
+            <li className="chip">The date and day number</li>
+          </ul>
         </div>
       </section>
 
@@ -130,8 +199,58 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
         </div>
       </section>
 
+
+      {/* The actual product, built from the app's own path component */}
+      <section className="band band--sunken" aria-labelledby="product-title">
+        <div className="band__inner">
+          <p className="eyebrow">Inside your path</p>
+          <h2 id="product-title" className="mt-2 text-title">Every memory joins the trail</h2>
+          <p className="measure mt-3 text-lead text-ink-muted">
+            Your path grows downward in the order things happened, from day one to whatever you added last week. Milestones you haven’t reached yet wait further down the trail.
+          </p>
+          <div className="preview mt-10">
+            <div className="preview__frame">
+              <Path markers={SAMPLE_MARKERS} me={SAMPLE_ME} partner={SAMPLE_PARTNER} since="2022-03-17" />
+            </div>
+            <p className="mt-4 text-caption text-ink-muted">A path with two memories saved, one still sealed, and the next milestone ahead.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Privacy, stated plainly */}
+      <section className="band" aria-labelledby="privacy-title">
+        <div className="band__inner">
+          <p className="eyebrow">Just the two of you</p>
+          <h2 id="privacy-title" className="mt-2 text-title">Nobody else is reading this</h2>
+          <ul className="facts mt-8">
+            <li className="fact panel"><h3 className="text-heading">Private by default</h3><p className="mt-2 text-ink-muted">A path holds exactly two people. There are no public profiles, no feed, no followers, no ads.</p></li>
+            <li className="fact panel"><h3 className="text-heading">Sealed until you both agree</h3><p className="mt-2 text-ink-muted">Your partner’s device is never even sent what you wrote until you both tap reveal. That rule lives in the database, not just the screen.</p></li>
+            <li className="fact panel"><h3 className="text-heading">Yours to remove</h3><p className="mt-2 text-ink-muted">Anything you added, you can delete, whenever you want.</p></li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Questions people actually ask */}
+      <section className="band band--sunken" aria-labelledby="faq-title">
+        <div className="band__inner band__inner--narrow">
+          <p className="eyebrow">Questions</p>
+          <h2 id="faq-title" className="mt-2 text-title">Before you start</h2>
+          <div className="mt-8 flex flex-col gap-3">
+            {FAQ.map((f) => (
+              <details className="faq panel" key={f.q}>
+                <summary className="faq__q">
+                  <span>{f.q}</span>
+                  <svg aria-hidden="true" viewBox="0 0 16 16" className="faq__chev" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 6l4 4 4-4" /></svg>
+                </summary>
+                <p className="mt-3 text-ink-muted">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 5 · Commitment: the path keeps going */}
-      <section id="sign-in" className="act act--close scroll-mt-4" aria-labelledby="sign-in-title">
+      <section id="sign-in" className="act act--close scroll-mt-24" aria-labelledby="sign-in-title">
         <ol className="ahead" aria-label="The path ahead">
           <li className="ahead__stop"><span className="hand-caveat text-hand">day 730</span><span className="eyebrow mt-1">two years</span></li>
           <li className="ahead__stop"><span className="hand-caveat text-hand">day 1,000</span><span className="eyebrow mt-1">1,000 days</span></li>
@@ -156,5 +275,12 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
         </div>
       </section>
     </main>
+
+      <footer className="footer">
+        <p className="font-display text-heading">Our Path</p>
+        <p className="mt-2 text-caption text-ink-muted">A private scrapbook for two. Free while we’re building it.</p>
+        <p className="mt-4 text-caption"><a className="btn-quiet" href="#sign-in">Start your path</a></p>
+      </footer>
+    </>
   );
 }
