@@ -119,6 +119,17 @@ export async function getVisibleMoments(ids?: string[]): Promise<Moment[]> {
   }));
 }
 
+/** Where the two of you stand on opening everything at once. */
+export async function getOpenAllState(coupleId: string, userId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase.from("open_all_votes").select("user_id").eq("couple_id", coupleId);
+  const votes = data ?? [];
+  return {
+    iAgreed: votes.some((v) => v.user_id === userId),
+    theyAgreed: votes.some((v) => v.user_id !== userId),
+  };
+}
+
 export function daysTogether(since: string | null) {
   if (!since) return null;
   const start = new Date(since + "T00:00:00");

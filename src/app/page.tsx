@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { getJourney, getVisibleMoments, daysTogether, type PathMarker } from "@/lib/journey";
+import { getJourney, getVisibleMoments, getOpenAllState, daysTogether, type PathMarker } from "@/lib/journey";
 import { signOut } from "@/app/actions";
 import Path from "@/components/path";
 import InvitePartner from "@/components/invite-partner";
 import MySide from "@/components/my-side";
 import ShareApp from "@/components/share-app";
+import OpenAll from "@/components/open-all";
 import { penClass, pinDisplay } from "@/lib/pins";
 
 export default async function Home() {
@@ -15,9 +16,15 @@ export default async function Home() {
   if (!j.couple) redirect("/start");
 
   const supabase = await createClient();
-  const [{ data }, visible] = await Promise.all([supabase.rpc("get_path"), getVisibleMoments()]);
+  const [{ data }, visible, openAll] = await Promise.all([
+    supabase.rpc("get_path"),
+    getVisibleMoments(),
+    getOpenAllState(j.couple.id, j.userId),
+  ]);
   const markers = (data ?? []) as PathMarker[];
   const moments = new Map(visible.map((m) => [m.id, m]));
+  const sealedFromThem = markers.filter((m) => !m.is_mine && !m.revealed).length;
+  const sealedFromMe = markers.filter((m) => m.is_mine && !m.revealed).length;
   const days = daysTogether(j.couple.together_since);
 
   return (
@@ -61,6 +68,18 @@ export default async function Home() {
       {!j.partner && (
         <div className="mt-8 lg:mt-6">
           <InvitePartner />
+        </div>
+      )}
+
+      {j.partner && (
+        <div className="mt-8 lg:mt-6">
+          <OpenAll
+            sealedFromThem={sealedFromThem}
+            sealedFromMe={sealedFromMe}
+            iAgreed={openAll.iAgreed}
+            theyAgreed={openAll.theyAgreed}
+            partnerName={j.partner.display_name}
+          />
         </div>
       )}
 

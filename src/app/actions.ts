@@ -225,3 +225,26 @@ export async function deleteMoment(momentId: string) {
   revalidatePath("/");
   redirect("/");
 }
+
+/** Agree to open every sealed memory on the path. It happens when both of you have. */
+export async function voteOpenAll() {
+  const supabase = await createClient();
+  const uid = await getUserId(supabase);
+  if (!uid) return { error: "Your sign-in expired. Please sign in again." };
+  const { data, error } = await supabase.rpc("vote_open_all");
+  if (error) return { error: "Unable to record that right now. Check your connection and try again." };
+  revalidatePath("/");
+  const row = (data as { both: boolean; opened: number }[] | null)?.[0];
+  return { both: !!row?.both, opened: row?.opened ?? 0 };
+}
+
+/** Change your mind while you're still waiting for them. */
+export async function withdrawOpenAll() {
+  const supabase = await createClient();
+  const uid = await getUserId(supabase);
+  if (!uid) return { error: "Your sign-in expired. Please sign in again." };
+  const { error } = await supabase.rpc("withdraw_open_all");
+  if (error) return { error: "Unable to change that right now. Check your connection and try again." };
+  revalidatePath("/");
+  return { ok: true };
+}

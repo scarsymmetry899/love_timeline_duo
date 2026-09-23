@@ -28,7 +28,9 @@ const FAQ = [
   { q: "What if my partner doesn’t join yet?", a: "You can start on your own and invite them whenever you like. Your memories wait for them." },
   { q: "Do I need to install anything?", a: "No. It runs in your phone’s browser, and you can add it to your home screen if you want it to feel like an app." },
   { q: "How do I sign in?", a: "Enter your email and we send you a 6-digit code. No passwords to remember or lose." },
-  { q: "Can I change my mind about a memory?", a: "Yes. Anything you added, you can edit or delete at any time." },
+  { q: "Do we both have to write about the same day?", a: "No. You each keep whatever you like, whenever you like. Seeing what the other person chose to keep is the best part." },
+  { q: "Can we open everything at once?", a: "Yes. Open one memory at a time, or both agree to open every sealed memory on the path together. Anything added afterwards is sealed again." },
+  { q: "Can I change my mind about a memory?", a: "Yes. Anything you added, you can delete at any time." },
 ];
 
 function Photo({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
@@ -64,10 +66,10 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
         <div className="stage hero-grid">
           <Trail d="M8 100 C 30 70, 20 40, 55 35 S 90 10, 96 -5" />
           <div className="hero-copy">
-            <p className="eyebrow">A private scrapbook for two</p>
+            <p className="eyebrow">A shared scrapbook for two</p>
             <h1 id="hero-title" className="mt-2 text-display">Our&nbsp;Path</h1>
             <p className="measure mt-4 text-lead text-ink-muted">
-              Keep the moments you don’t want to forget: photos, a few lines in your own words, a voice note. Everything you add stays sealed on your side until you both choose to open it together.
+              Two scrapbooks on one path. You keep what mattered to you, they keep what mattered to them, and neither side opens until you both say so.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
               <a href="#sign-in" className="btn">Start your path</a>
@@ -95,27 +97,30 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
       <section id="how" className="band" aria-labelledby="how-title">
         <div className="band__inner">
           <p className="eyebrow">How it works</p>
-          <h2 id="how-title" className="mt-2 text-title">Three steps, and the rest is yours</h2>
+          <h2 id="how-title" className="mt-2 text-title">Two people, one path</h2>
+          <p className="measure mt-3 text-lead text-ink-muted">
+            Nobody has to write about the same day, or the same thing. You each keep what you want to keep. That’s the whole point.
+          </p>
           <ol className="steps mt-10">
             <li className="step panel">
               <span className="step__n" aria-hidden="true">1</span>
-              <h3 className="text-heading">Add a memory</h3>
+              <h3 className="text-heading">Keep your own things</h3>
               <p className="mt-2 text-ink-muted">
-                A photo, a few lines in your own words, a voice note, the song that was playing, where you were. Anything worth keeping.
+                A photo, a few lines in your own words, the song that was playing, where you were. Whatever you’d want to find again in ten years.
               </p>
             </li>
             <li className="step panel">
               <span className="step__n" aria-hidden="true">2</span>
-              <h3 className="text-heading">It stays sealed</h3>
+              <h3 className="text-heading">It waits, sealed</h3>
               <p className="mt-2 text-ink-muted">
-                Your partner sees that you saved something that day, and the date. Not a word of what you wrote, until you’re both ready.
+                They see that you kept something, and when. Not a word of it. Your side of the path stays yours until you decide otherwise.
               </p>
             </li>
             <li className="step panel">
               <span className="step__n" aria-hidden="true">3</span>
               <h3 className="text-heading">Open it together</h3>
               <p className="mt-2 text-ink-muted">
-                When you both tap reveal, the memory opens on the path and you see how they remembered the very same day.
+                One memory, or everything at once when you’re both ready. Then you finally see what they’ve been keeping, and what they treasure most.
               </p>
             </li>
           </ol>
@@ -126,6 +131,7 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
             <li className="chip">A song link</li>
             <li className="chip">The place</li>
             <li className="chip">The date and day number</li>
+            <li className="chip">Whose side it’s from</li>
           </ul>
         </div>
       </section>
@@ -134,18 +140,18 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
       <section data-act className="act act--two" aria-labelledby="two-title">
         <div className="stage two-grid">
           <Trail d="M50 -5 C 20 25, 80 45, 50 60 S 30 90, 45 105" />
-          <h2 id="two-title" className="two-title text-title">Same day. Two memories.</h2>
+          <h2 id="two-title" className="two-title text-title">What they kept isn’t what you kept</h2>
           <figure className="two-photo polaroid">
             <Photo src={PHOTO.seaWalk} alt="A couple walking hand in hand along the shore" sizes="(max-width: 960px) 80vw, 460px" />
-            <figcaption className="hand-caveat hero-caption">day 412, Gokarna</figcaption>
+            <figcaption className="hand-caveat hero-caption">the walk back, day 412</figcaption>
           </figure>
           <p className="caption-card caption-card--his">
-            <span className="eyebrow">Tj remembers</span>
-            <span className="hand-caveat caption-card__quote">“the rain ruined everything”</span>
+            <span className="eyebrow">Tj kept</span>
+            <span className="hand-caveat caption-card__quote">“the chai guy who remembered our order”</span>
           </p>
           <p className="caption-card caption-card--hers">
-            <span className="eyebrow">Mira remembers</span>
-            <span className="hand-dancing caption-card__quote">“best day of the whole trip”</span>
+            <span className="eyebrow">Mira kept</span>
+            <span className="hand-dancing caption-card__quote">“you singing badly the whole drive home”</span>
           </p>
         </div>
       </section>
@@ -157,7 +163,7 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
           <div className="sealed-copy">
             <h2 id="sealed-title" className="text-title">Each side stays sealed</h2>
             <p className="measure mt-4 text-lead text-ink-muted">
-              You write what you remember. So do they. Neither of you can read the other’s side until you both decide to.
+You fill your side. They fill theirs. Neither of you can read the other’s until you both decide to, so nobody writes for an audience.
             </p>
           </div>
           <div className="envelopes" aria-hidden="true">
@@ -191,9 +197,9 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
             </div>
           </div>
           <div className="peak-copy">
-            <h2 id="peak-title" className="text-title">Opened together</h2>
+            <h2 id="peak-title" className="text-title">Then you read each other</h2>
             <p className="measure mx-auto mt-3 text-lead text-ink-muted">
-              When you’re both ready, you each tap reveal. Then you finally get to see how they remembered it.
+Open one memory, or agree to open everything at once, and read their whole side of the path: what they noticed, what they saved, what they treasure most.
             </p>
           </div>
         </div>
@@ -204,9 +210,9 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
       <section className="band band--sunken" aria-labelledby="product-title">
         <div className="band__inner">
           <p className="eyebrow">Inside your path</p>
-          <h2 id="product-title" className="mt-2 text-title">Every memory joins the trail</h2>
+          <h2 id="product-title" className="mt-2 text-title">Both sides, one trail</h2>
           <p className="measure mt-3 text-lead text-ink-muted">
-            Your path grows downward in the order things happened, from day one to whatever you added last week. Milestones you haven’t reached yet wait further down the trail.
+Your memories and theirs sit on the same trail, in the order they happened, each marked with whose it is. Sealed ones show as an envelope. Milestones you haven’t reached yet wait further down.
           </p>
           <div className="preview mt-10">
             <div className="preview__frame">
@@ -224,7 +230,7 @@ export default function Landing({ next, joining, oldLinkFailed }: { next: string
           <h2 id="privacy-title" className="mt-2 text-title">Nobody else is reading this</h2>
           <ul className="facts mt-8">
             <li className="fact panel"><h3 className="text-heading">Private by default</h3><p className="mt-2 text-ink-muted">A path holds exactly two people. There are no public profiles, no feed, no followers, no ads.</p></li>
-            <li className="fact panel"><h3 className="text-heading">Sealed until you both agree</h3><p className="mt-2 text-ink-muted">Your partner’s device is never even sent what you wrote until you both tap reveal. That rule lives in the database, not just the screen.</p></li>
+            <li className="fact panel"><h3 className="text-heading">Sealed until you both agree</h3><p className="mt-2 text-ink-muted">Their device is never even sent what you wrote until you both agree to open it. That rule lives in the database, not just on the screen.</p></li>
             <li className="fact panel"><h3 className="text-heading">Yours to remove</h3><p className="mt-2 text-ink-muted">Anything you added, you can delete, whenever you want.</p></li>
           </ul>
         </div>
